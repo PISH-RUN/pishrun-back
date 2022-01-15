@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "halls",
+  "info": {
+    "singularName": "hall",
+    "pluralName": "halls",
+    "displayName": "Hall",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "seats": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::seat.seat",
+      "mappedBy": "hall"
+    }
+  }
+}

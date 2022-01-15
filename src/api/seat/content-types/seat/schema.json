@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "seats",
+  "info": {
+    "singularName": "seat",
+    "pluralName": "seats",
+    "displayName": "Seat",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "slug": {
+      "type": "string",
+      "required": true,
+      "unique": false
+    },
+    "hall": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::hall.hall",
+      "inversedBy": "seats"
+    }
+  }
+}

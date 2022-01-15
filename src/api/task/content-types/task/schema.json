@@ -1,0 +1,62 @@
+{
+  "kind": "collectionType",
+  "collectionName": "tasks",
+  "info": {
+    "singularName": "task",
+    "pluralName": "tasks",
+    "displayName": "Task",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "body": {
+      "type": "text"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "todo",
+        "inprogress",
+        "done"
+      ]
+    },
+    "priority": {
+      "type": "enumeration",
+      "enum": [
+        "urgent",
+        "important",
+        "normal"
+      ]
+    },
+    "level": {
+      "type": "integer"
+    },
+    "estimation": {
+      "type": "integer"
+    },
+    "beganAt": {
+      "type": "datetime"
+    },
+    "finishedAt": {
+      "type": "datetime"
+    },
+    "member": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::member.member",
+      "inversedBy": "tasks"
+    },
+    "discussion": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::discussion.discussion",
+      "inversedBy": "task"
+    }
+  }
+}
