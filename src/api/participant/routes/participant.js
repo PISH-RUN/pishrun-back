@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * member router.
+ * participant router.
  */
 
 const { createCoreRouter } = require('@strapi/strapi').factories;
 
-module.exports = createCoreRouter('api::member.member');
+module.exports = createCoreRouter('api::participant.participant');

@@ -1,44 +1,27 @@
 {
   "kind": "collectionType",
-  "collectionName": "members",
+  "collectionName": "participants",
   "info": {
-    "singularName": "member",
-    "pluralName": "members",
-    "displayName": "Member",
-    "description": ""
+    "singularName": "participant",
+    "pluralName": "participants",
+    "displayName": "Participant"
   },
   "options": {
     "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
-    "role": {
-      "type": "enumeration",
-      "enum": [
-        "teammate",
-        "manager"
-      ],
-      "required": true,
-      "default": "teammate"
-    },
-    "enteredAt": {
-      "type": "datetime",
-      "required": false
-    },
-    "exitedAt": {
-      "type": "datetime"
-    },
     "users_permissions_user": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
-      "inversedBy": "members"
+      "inversedBy": "participants"
     },
     "team": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::team.team",
-      "inversedBy": "members"
+      "inversedBy": "participants"
     },
     "seat": {
       "type": "relation",
@@ -48,14 +31,28 @@
     "tasks": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::task.task",
-      "mappedBy": "member"
+      "target": "api::task.task"
     },
     "discussions": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::discussion.discussion",
-      "mappedBy": "member"
+      "mappedBy": "participant"
+    },
+    "role": {
+      "type": "enumeration",
+      "enum": [
+        "teammate",
+        "manager"
+      ],
+      "default": "teammate",
+      "required": true
+    },
+    "enteredAt": {
+      "type": "datetime"
+    },
+    "exitedAt": {
+      "type": "datetime"
     }
   }
 }

@@ -15,17 +15,17 @@
     "body": {
       "type": "text"
     },
-    "member": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::member.member",
-      "inversedBy": "discussions"
-    },
     "task": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::task.task",
       "mappedBy": "discussion"
+    },
+    "participant": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::participant.participant",
+      "inversedBy": "discussions"
     }
   }
 }

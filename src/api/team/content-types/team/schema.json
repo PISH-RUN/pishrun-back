@@ -25,10 +25,10 @@
       "target": "api::event.event",
       "inversedBy": "teams"
     },
-    "members": {
+    "participants": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::member.member",
+      "target": "api::participant.participant",
       "mappedBy": "team"
     }
   }

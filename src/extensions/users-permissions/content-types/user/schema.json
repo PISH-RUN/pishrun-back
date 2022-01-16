@@ -63,10 +63,10 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "members": {
+    "participants": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::member.member",
+      "target": "api::participant.participant",
       "mappedBy": "users_permissions_user"
     }
   }

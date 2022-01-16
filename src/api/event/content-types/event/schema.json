@@ -43,6 +43,9 @@
       "type": "boolean",
       "default": false,
       "required": true
+    },
+    "status": {
+      "type": "string"
     }
   }
 }

@@ -15,9 +15,6 @@
     "title": {
       "type": "string"
     },
-    "body": {
-      "type": "text"
-    },
     "status": {
       "type": "enumeration",
       "enum": [
@@ -46,17 +43,33 @@
     "finishedAt": {
       "type": "datetime"
     },
-    "member": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::member.member",
-      "inversedBy": "tasks"
-    },
     "discussion": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::discussion.discussion",
       "inversedBy": "task"
+    },
+    "suspended": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "order": {
+      "type": "integer",
+      "default": 1,
+      "required": true,
+      "min": 1,
+      "max": 10
+    },
+    "body": {
+      "type": "richtext",
+      "required": true
+    },
+    "link": {
+      "displayName": "link",
+      "type": "component",
+      "repeatable": true,
+      "component": "link.link"
     }
   }
 }
