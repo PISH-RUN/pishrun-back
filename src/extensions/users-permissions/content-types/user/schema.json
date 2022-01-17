@@ -68,6 +68,11 @@
       "relation": "oneToMany",
       "target": "api::participant.participant",
       "mappedBy": "users_permissions_user"
+    },
+    "mobile": {
+      "type": "string",
+      "unique": true,
+      "regex": "^(\\+98|0)?9\\d{9}$"
     }
   }
 }
