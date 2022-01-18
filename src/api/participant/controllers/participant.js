@@ -10,28 +10,15 @@ module.exports = createCoreController(
   "api::participant.participant",
   ({ strapi }) => ({
     async find(ctx) {
-      const currentEvent = await strapi.db.query("api::event.event").findOne({
-        select: ["id"],
-        where: {
-          is_performing: 1,
-        },
-      });
+      const eventId = await strapi.service("api::event.event").currentEvent();
 
-      const participant = await strapi.db
-        .query("api::participant.participant")
-        .findOne({
-          where: {
-            users_permissions_user: {
-              id: ctx.state.user.id,
-            },
-            team: {
-              event: {
-                id: currentEvent.id,
-              },
-            },
-          },
-          populate: ["team", "tasks"],
-        });
+      if (!eventId) {
+        return null;
+      }
+
+      const participant = await strapi
+        .service("api::participant.participant")
+        .currentParticipant(ctx.state.user.id, { populate: ["team", "tasks"] });
 
       return {
         data: participant,
@@ -40,34 +27,32 @@ module.exports = createCoreController(
 
     async enter(ctx) {
       const { slug } = ctx.request.body;
-      const currentEvent = await strapi.db.query("api::event.event").findOne({
-        select: ["id"],
+      const event = await strapi.service("api::event.event").currentEvent({
         where: {
-          slug: slug,
-          is_performing: 1,
+          slug,
         },
       });
 
-      if (!currentEvent) {
+      if (!event) {
         return null;
       }
 
-      const participant = await strapi.db
+      let participant = await strapi
+        .service("api::participant.participant")
+        .participant(ctx.state.user.id, event.id);
+
+      if (!participant || participant.enteredAt) {
+        return null;
+      }
+
+      participant = await strapi.db
         .query("api::participant.participant")
         .update({
           data: {
             enteredAt: new Date(),
           },
           where: {
-            enteredAt: null,
-            users_permissions_user: {
-              id: ctx.state.user.id,
-            },
-            team: {
-              event: {
-                id: currentEvent.id,
-              },
-            },
+            id: participant.id,
           },
         });
 

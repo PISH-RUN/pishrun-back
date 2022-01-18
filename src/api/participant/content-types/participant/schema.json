@@ -4,7 +4,8 @@
   "info": {
     "singularName": "participant",
     "pluralName": "participants",
-    "displayName": "Participant"
+    "displayName": "Participant",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
@@ -31,7 +32,8 @@
     "tasks": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::task.task"
+      "target": "api::task.task",
+      "mappedBy": "participant"
     },
     "discussions": {
       "type": "relation",

@@ -1,9 +1,24 @@
-'use strict';
+"use strict";
+const merge = require("lodash/merge");
 
 /**
  * event service.
  */
 
-const { createCoreService } = require('@strapi/strapi').factories;
+const { createCoreService } = require("@strapi/strapi").factories;
 
-module.exports = createCoreService('api::event.event');
+module.exports = createCoreService("api::event.event", ({ strapi }) => ({
+  async currentEvent(cfg = {}) {
+    let config = {
+      where: {
+        is_performing: 1,
+      },
+    };
+
+    const event = await strapi.db
+      .query("api::event.event")
+      .findOne(merge(config, cfg));
+
+    return event;
+  },
+}));
