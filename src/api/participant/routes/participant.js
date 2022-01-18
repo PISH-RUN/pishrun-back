@@ -1,9 +1,16 @@
-'use strict';
+"use strict";
 
-/**
- * participant router.
- */
-
-const { createCoreRouter } = require('@strapi/strapi').factories;
-
-module.exports = createCoreRouter('api::participant.participant');
+module.exports = {
+  routes: [
+    {
+      method: "GET",
+      path: "/participant",
+      handler: "participant.find",
+    },
+    {
+      method: "POST",
+      path: "/participant/enter",
+      handler: "participant.enter",
+    },
+  ],
+};
