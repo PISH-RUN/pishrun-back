@@ -30,6 +30,12 @@
       "relation": "oneToMany",
       "target": "api::participant.participant",
       "mappedBy": "team"
+    },
+    "tasks": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::task.task",
+      "mappedBy": "team"
     }
   }
 }

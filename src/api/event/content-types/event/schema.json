@@ -46,6 +46,12 @@
     },
     "status": {
       "type": "string"
+    },
+    "task": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::task.task",
+      "mappedBy": "event"
     }
   }
 }

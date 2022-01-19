@@ -21,7 +21,9 @@
         "todo",
         "inprogress",
         "done"
-      ]
+      ],
+      "default": "todo",
+      "required": true
     },
     "priority": {
       "type": "enumeration",
@@ -29,7 +31,9 @@
         "urgent",
         "important",
         "normal"
-      ]
+      ],
+      "default": "normal",
+      "required": true
     },
     "level": {
       "type": "integer"
@@ -75,6 +79,18 @@
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::participant.participant",
+      "inversedBy": "tasks"
+    },
+    "event": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::event.event",
+      "inversedBy": "task"
+    },
+    "team": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::team.team",
       "inversedBy": "tasks"
     }
   }
