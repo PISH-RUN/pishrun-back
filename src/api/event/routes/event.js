@@ -1,11 +1,7 @@
 "use strict";
 
-module.exports = {
-  routes: [
-    {
-      method: "GET",
-      path: "/event",
-      handler: "event.find",
-    },
-  ],
-};
+const { createCoreRouter } = require("@strapi/strapi").factories;
+
+module.exports = createCoreRouter("api::event.event", {
+  only: ["findOne"],
+});

@@ -12,7 +12,9 @@ module.exports = createCoreController(
     async find(ctx) {
       const { participant } = await strapi
         .service("api::participant.participant")
-        .currentParticipant(ctx.state.user.id, { populate: ["team", "tasks"] });
+        .currentParticipant(ctx.state.user.id, {
+          populate: ["team", "team.event", "tasks", "seat", "seat.hall"],
+        });
 
       return {
         data: participant,

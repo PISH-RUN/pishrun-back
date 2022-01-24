@@ -19,6 +19,18 @@ module.exports = ({ strapi }) => ({
       populate: ["participants", "tasks"],
     });
 
+    let participants = await strapi.db
+      .query("api::participant.participant")
+      .count({
+        where: {
+          team: {
+            event: {
+              id: event.id,
+            },
+          },
+        },
+      });
+
     teams = teams.map((team) => ({
       id: team.id,
       name: team.name,
@@ -26,7 +38,7 @@ module.exports = ({ strapi }) => ({
       tasks: { total: team.tasks.length, ...tasksStatusCounter(team.tasks) },
     }));
 
-    return { team: participant.team, teams };
+    return { data: { team: participant.team, teams, participants } };
   },
 });
 
