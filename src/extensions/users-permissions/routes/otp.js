@@ -1,0 +1,24 @@
+"use strict";
+
+module.exports = {
+  routes: [
+    {
+      method: "POST",
+      path: "/auth/otp",
+      handler: "auth.otp",
+      config: {
+        prefix: "",
+        middlewares: ["plugin::users-permissions.rateLimit"],
+      },
+    },
+    {
+      method: "POST",
+      path: "/auth/login",
+      handler: "auth.login",
+      config: {
+        prefix: "",
+        middlewares: ["plugin::users-permissions.rateLimit"],
+      },
+    },
+  ],
+};
