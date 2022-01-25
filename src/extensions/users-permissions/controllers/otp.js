@@ -53,6 +53,10 @@ const sendOtp = async (user) => {
 };
 
 const createUser = async (mobile) => {
+  const advanced = await strapi
+    .store({ type: "plugin", name: "users-permissions", key: "advanced" })
+    .get();
+
   const defaultRole = await strapi
     .query("plugin::users-permissions.role")
     .findOne({ where: { type: advanced.default_role } });
@@ -66,10 +70,6 @@ const createUser = async (mobile) => {
 
 module.exports = {
   async otp(ctx) {
-    const advanced = await strapi
-      .store({ type: "plugin", name: "users-permissions", key: "advanced" })
-      .get();
-
     await validateCreateUserBody(ctx.request.body);
 
     const { mobile } = ctx.request.body;

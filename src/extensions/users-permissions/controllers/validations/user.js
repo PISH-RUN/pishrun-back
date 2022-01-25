@@ -9,12 +9,22 @@ const createUserBodySchema = yup.object().shape({
     .required(),
 });
 
-const updateUserBodySchema = yup.object().shape({
-  email: yup.string().email().min(1),
-  username: yup.string().min(1),
-  password: yup.string().min(1),
-});
+const updateUserBodySchema = yup
+  .object()
+  .noUnknown(true)
+  .shape({
+    email: yup.string().email().nullable(),
+    gender: yup.string().matches("male").matches("female").nullable(),
+    firstName: yup.string().nullable(),
+    lastName: yup.string().nullable(),
+    birthdate: yup.string().nullable(),
+    degree: yup.string().nullable(),
+    linkedin: yup.string().url().nullable(),
+    twitter: yup.string().url().nullable(),
+    behance: yup.string().url().nullable(),
+  });
 
 module.exports = {
   validateCreateUserBody: validateYupSchema(createUserBodySchema),
+  validateUpdateUserBody: validateYupSchema(updateUserBodySchema),
 };
