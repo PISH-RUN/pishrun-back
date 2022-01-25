@@ -37,7 +37,10 @@
     },
     "gender": {
       "type": "enumeration",
-      "enum": ["male", "female"]
+      "enum": [
+        "male",
+        "female"
+      ]
     },
     "firstName": {
       "type": "string",
@@ -73,6 +76,15 @@
     "otpExpiresAt": {
       "type": "datetime",
       "private": true
+    },
+    "avatar": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
+      "type": "media",
+      "multiple": true
     }
   }
 }

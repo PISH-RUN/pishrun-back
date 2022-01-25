@@ -25,6 +25,7 @@ const updateUserBodySchema = yup
     linkedin: yup.string().url().nullable(),
     twitter: yup.string().url().nullable(),
     behance: yup.string().url().nullable(),
+    avatar: yup.string().url().nullable(),
   });
 
 module.exports = {
