@@ -14,7 +14,10 @@ const updateUserBodySchema = yup
   .noUnknown(true)
   .shape({
     email: yup.string().email().nullable(),
-    gender: yup.string().matches("male").matches("female").nullable(),
+    gender: yup
+      .string()
+      .matches(/(male|female)/)
+      .nullable(),
     firstName: yup.string().nullable(),
     lastName: yup.string().nullable(),
     birthdate: yup.string().nullable(),
