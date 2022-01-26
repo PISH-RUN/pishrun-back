@@ -84,6 +84,10 @@
       "allowedTypes": [
         "images"
       ]
+    },
+    "uid": {
+      "type": "uid",
+      "targetField": "mobile"
     }
   }
 }
