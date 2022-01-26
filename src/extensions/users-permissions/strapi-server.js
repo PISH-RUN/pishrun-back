@@ -10,12 +10,14 @@ module.exports = (plugin) => {
   };
 
   plugin.controllers.user = {
-    ...userController,
     ...plugin.controllers.user,
+    ...userController,
   };
 
   plugin.routes["content-api"].routes.push(...otpRoutes.routes);
   plugin.routes["content-api"].routes.unshift(...userRoutes.routes);
+
+  console.log(plugin.controllers.user);
 
   return plugin;
 };

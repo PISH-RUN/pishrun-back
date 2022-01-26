@@ -33,4 +33,16 @@ module.exports = {
 
     ctx.send(sanitizedData);
   },
+  async me(ctx) {
+    if (!ctx.state.user) {
+      return ctx.unauthorized();
+    }
+    const user = await strapi.entityService.findOne(
+      "plugin::users-permissions.user",
+      ctx.state.user.id,
+      { populate: ["avatar"] }
+    );
+
+    ctx.body = await sanitizeOutput(user, ctx);
+  },
 };
