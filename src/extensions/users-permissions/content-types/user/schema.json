@@ -88,6 +88,25 @@
     "uid": {
       "type": "uid",
       "targetField": "mobile"
+    },
+    "maritalStatus": {
+      "type": "enumeration",
+      "enum": [
+        "single",
+        "married"
+      ]
+    },
+    "children": {
+      "type": "integer"
+    },
+    "fieldStudy": {
+      "type": "string"
+    },
+    "abilities": {
+      "type": "text"
+    },
+    "equipment": {
+      "type": "text"
     }
   }
 }

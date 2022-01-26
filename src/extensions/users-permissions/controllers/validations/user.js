@@ -18,10 +18,18 @@ const updateUserBodySchema = yup
       .string()
       .matches(/(male|female)/)
       .nullable(),
+    maritalStatus: yup
+      .string()
+      .matches(/(single|married)/)
+      .nullable(),
     firstName: yup.string().nullable(),
     lastName: yup.string().nullable(),
     birthdate: yup.string().nullable(),
     degree: yup.string().nullable(),
+    fieldStudy: yup.string().nullable(),
+    abilities: yup.string().nullable(),
+    equipment: yup.string().nullable(),
+    children: yup.number().integer().nullable(),
     linkedin: yup.string().url().nullable(),
     twitter: yup.string().url().nullable(),
     behance: yup.string().url().nullable(),
