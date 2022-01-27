@@ -62,7 +62,7 @@
     "twitter": {
       "type": "string"
     },
-    "behance": {
+    "instagram": {
       "type": "string"
     },
     "otp": {

@@ -34,7 +34,7 @@ const updateUserBodySchema = yup
     children: yup.number().integer().nullable(),
     linkedin: yup.string().url().nullable(),
     twitter: yup.string().url().nullable(),
-    behance: yup.string().url().nullable(),
+    instagram: yup.string().url().nullable(),
   });
 
 module.exports = {
