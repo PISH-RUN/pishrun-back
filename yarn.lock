@@ -6436,6 +6436,11 @@ luxon@^1.26.0:
   resolved "https://registry.yarnpkg.com/luxon/-/luxon-1.28.0.tgz#e7f96daad3938c06a62de0fb027115d251251fbf"
   integrity sha512-TfTiyvZhwBYM/7QdAVDh+7dBTBA29v4ik0Ce9zda3Mnf8on1S5KJI8P2jKFZ8+5C0jhmr0KwJEO/Wdpm0VeWJQ==
 
+luxon@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-2.3.0.tgz#bf16a7e642513c2a20a6230a6a41b0ab446d0045"
+  integrity sha512-gv6jZCV+gGIrVKhO90yrsn8qXPKD8HYZJtrUDSfEbow8Tkw84T9OnCyJhWvnJIaIF/tBuiAjZuQHUt1LddX2mg==
+
 mailcomposer@3.12.0:
   version "3.12.0"
   resolved "https://registry.yarnpkg.com/mailcomposer/-/mailcomposer-3.12.0.tgz#9c5e1188aa8e1c62ec8b86bd43468102b639e8f9"

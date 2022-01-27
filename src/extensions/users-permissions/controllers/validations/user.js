@@ -7,6 +7,8 @@ const createUserBodySchema = yup.object().shape({
     .string()
     .matches(/^(\+98|0)?9\d{9}$/)
     .required(),
+  referredBy: yup
+    .number(),
 });
 
 const updateUserBodySchema = yup

@@ -52,7 +52,7 @@ const sendOtp = async (user) => {
   await smsService().otp(user.mobile, otp);
 };
 
-const createUser = async (mobile) => {
+const createUser = async (mobile, referredBy) => {
   const advanced = await strapi
     .store({ type: "plugin", name: "users-permissions", key: "advanced" })
     .get();
@@ -62,7 +62,7 @@ const createUser = async (mobile) => {
     .findOne({ where: { type: advanced.default_role } });
 
   try {
-    return await getService("user").add({ mobile, role: defaultRole });
+    return await getService("user").add({ mobile, referredBy, role: defaultRole });
   } catch (error) {
     throw new ApplicationError(error.message);
   }
@@ -83,6 +83,24 @@ module.exports = {
     }
 
     await sendOtp(user);
+
+    return {
+      ok: true,
+    };
+  },
+
+  async addUser(ctx) {
+    await validateCreateUserBody(ctx.request.body);
+
+    const { mobile, referredBy } = ctx.request.body;
+
+    let user = await strapi
+      .query("plugin::users-permissions.user")
+      .findOne({ where: { mobile } });
+
+    if (!user) {
+      user = await createUser(mobile, referredBy);
+    }
 
     return {
       ok: true,
@@ -111,6 +129,7 @@ module.exports = {
 
     await updateUser(user.id, {
       otp: null,
+      registered: true,
       otpSentAt: null,
       otpExpiresAt: null,
     });

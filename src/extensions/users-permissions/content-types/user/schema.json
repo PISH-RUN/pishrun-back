@@ -97,7 +97,8 @@
       ]
     },
     "children": {
-      "type": "integer"
+      "type": "integer",
+      "default": 0
     },
     "fieldStudy": {
       "type": "string"
@@ -107,6 +108,22 @@
     },
     "equipment": {
       "type": "text"
+    },
+    "referredBy": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "referredUsers"
+    },
+    "referredUsers": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "referredBy"
+    },
+    "registered": {
+      "type": "boolean",
+      "default": false
     }
   }
 }
