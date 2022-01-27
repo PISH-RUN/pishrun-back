@@ -27,7 +27,7 @@ const updateUser = async (id, data) => await getService("user").edit(id, data);
 
 const sendOtp = async (user) => {
   const now = new Date();
-  if (
+  if(
     user.otpSentAt &&
     differenceInMinutes(now, parseISO(user.otpSentAt)) < tokenRequestPeriod
   ) {
@@ -35,7 +35,7 @@ const sendOtp = async (user) => {
   }
 
   let otp = token().toString();
-  if (
+  if(
     user.otp &&
     user.otpExpiresAt &&
     differenceInMinutes(now, parseISO(user.otpExpiresAt)) < tokenExpiryMinutes
@@ -46,7 +46,7 @@ const sendOtp = async (user) => {
   await updateUser(user.id, {
     otp,
     otpSentAt: now,
-    otpExpiresAt: addMinutes(now, 15),
+    otpExpiresAt: addMinutes(now, 15)
   });
 
   await smsService().otp(user.mobile, otp);
@@ -78,14 +78,14 @@ module.exports = {
       .query("plugin::users-permissions.user")
       .findOne({ where: { mobile } });
 
-    if (!user) {
+    if(!user) {
       user = await createUser(mobile);
     }
 
     await sendOtp(user);
 
     return {
-      ok: true,
+      ok: true
     };
   },
 
@@ -98,13 +98,16 @@ module.exports = {
       .query("plugin::users-permissions.user")
       .findOne({ where: { mobile } });
 
-    if (!user) {
+    if(!user) {
       user = await createUser(mobile, referredBy);
+
+      return {
+        ok: true
+      };
     }
 
-    return {
-      ok: true,
-    };
+    ctx.res.statusCode = 422;
+    return ctx.res.end();
   },
 
   async login(ctx) {
@@ -112,17 +115,17 @@ module.exports = {
 
     const query = {
       mobile: params.mobile,
-      otp: params.token,
+      otp: params.token
     };
 
     const user = await strapi
       .query("plugin::users-permissions.user")
       .findOne({ where: query });
 
-    if (
+    if(
       !user ||
       differenceInMinutes(new Date(), parseISO(user.otpExpiresAt)) >
-        tokenExpiryMinutes
+      tokenExpiryMinutes
     ) {
       throw new ValidationError("Invalid Credentials");
     }
@@ -131,14 +134,14 @@ module.exports = {
       otp: null,
       registered: true,
       otpSentAt: null,
-      otpExpiresAt: null,
+      otpExpiresAt: null
     });
 
     ctx.send({
       jwt: getService("jwt").issue({
-        id: user.id,
+        id: user.id
       }),
-      user: await sanitizeUser(user, ctx),
+      user: await sanitizeUser(user, ctx)
     });
-  },
+  }
 };
