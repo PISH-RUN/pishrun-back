@@ -79,7 +79,7 @@ module.exports = {
       .findOne({ where: { mobile } });
 
     if(!user) {
-      user = await createUser(mobile);
+      user = await createUser({mobile});
     }
 
     await sendOtp(user);
