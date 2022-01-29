@@ -5,7 +5,7 @@ const { yup, validateYupSchema } = require("@strapi/utils");
 const createUserBodySchema = yup.object().shape({
   mobile: yup
     .string()
-    .matches(/^(\+98|0)?9\d{9}$/)
+    .matches(/^\+989\d{9}$/)
     .required(),
   referredBy: yup
     .number(),
