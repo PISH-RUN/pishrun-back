@@ -13,7 +13,7 @@ module.exports = createCoreController(
       const { participant } = await strapi
         .service("api::participant.participant")
         .currentParticipant(ctx.state.user.id, {
-          populate: ["team", "team.event", "tasks", "seat", "seat.hall"],
+          populate: ["team", "team.event", "tasks", "seat", "seat.hall", "users_permissions_user"],
         });
 
       return {

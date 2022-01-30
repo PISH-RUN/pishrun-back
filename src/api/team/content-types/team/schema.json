@@ -36,6 +36,12 @@
       "relation": "oneToMany",
       "target": "api::task.task",
       "mappedBy": "team"
+    },
+    "wifiUsername": {
+      "type": "string"
+    },
+    "wifiPassword": {
+      "type": "string"
     }
   }
 }

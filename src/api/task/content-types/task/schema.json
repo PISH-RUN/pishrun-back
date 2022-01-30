@@ -20,7 +20,8 @@
       "enum": [
         "todo",
         "inprogress",
-        "done"
+        "done",
+        "failed"
       ],
       "default": "todo",
       "required": true
