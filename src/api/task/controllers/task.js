@@ -48,7 +48,7 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
     const { id } = ctx.request.params;
     const currentTask = await strapi
       .service("api::task.task")
-      .currentEvent({
+      .findOne({
         where: {
           id
         }
