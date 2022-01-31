@@ -147,4 +147,23 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
       data: task
     };
   },
+
+  async discussions(ctx) {
+    const { id } = ctx.request.params;
+
+    const discussions = await strapi.db
+      .query("api::discussion.discussion")
+      .findMany({
+        where: {
+          task: {
+            id
+          }
+        },
+        populate: ["participant", "participant.users_permissions_user", "task"]
+      });
+
+    return {
+      data: discussions
+    };
+  },
 }));

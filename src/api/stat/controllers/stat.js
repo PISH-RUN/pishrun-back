@@ -39,6 +39,21 @@ module.exports = ({ strapi }) => ({
       }
     });
 
+    let medals = {
+      light: 0,
+      rocket: 0,
+      jet: 0
+    };
+    let userTasks = await strapi.db.query("api::task.task").findMany({
+      where: {
+        participant: {
+          id: participant.id
+        }
+      }
+    });
+    userTasks.map(task => {
+      if(task.medal) medals[task.medal] += 1;
+    });
     let participantCounts = participantsCounter(participants);
     let teamParticipantCounts = participantsCounter(participant.team.participants);
 
@@ -55,6 +70,7 @@ module.exports = ({ strapi }) => ({
 
     return {
       data: {
+        medals,
         team: {
           ...participant.team,
           participants: teamParticipantCounts
