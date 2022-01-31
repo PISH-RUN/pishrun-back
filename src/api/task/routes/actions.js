@@ -1,7 +1,7 @@
 module.exports = {
   routes: [
     {
-      method: "GET",
+      method: "POST",
       path: "/tasks/:id/start",
       handler: "task.start",
       config: {
@@ -10,7 +10,7 @@ module.exports = {
       },
     },
     {
-      method: "GET",
+      method: "POST",
       path: "/tasks/:id/finish",
       handler: "task.finish",
       config: {
@@ -19,7 +19,7 @@ module.exports = {
       },
     },
     {
-      method: "GET",
+      method: "POST",
       path: "/tasks/:id/suspend",
       handler: "task.suspend",
       config: {
@@ -28,7 +28,7 @@ module.exports = {
       },
     },
     {
-      method: "GET",
+      method: "POST",
       path: "/tasks/:id/unsuspend",
       handler: "task.unsuspend",
       config: {
@@ -37,7 +37,7 @@ module.exports = {
       },
     },
     {
-      method: "GET",
+      method: "POST",
       path: "/tasks/:id/fail",
       handler: "task.fail",
       config: {
