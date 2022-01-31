@@ -17,9 +17,9 @@
     },
     "task": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "manyToOne",
       "target": "api::task.task",
-      "mappedBy": "discussion"
+      "inversedBy": "discussions"
     },
     "participant": {
       "type": "relation",

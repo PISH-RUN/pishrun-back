@@ -48,12 +48,6 @@
     "finishedAt": {
       "type": "datetime"
     },
-    "discussion": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::discussion.discussion",
-      "inversedBy": "task"
-    },
     "suspended": {
       "type": "boolean",
       "default": false,
@@ -101,6 +95,12 @@
         "rocket",
         "jet"
       ]
+    },
+    "discussions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::discussion.discussion",
+      "mappedBy": "task"
     }
   }
 }
