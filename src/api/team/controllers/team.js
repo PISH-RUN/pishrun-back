@@ -18,9 +18,14 @@ module.exports = createCoreController(
         populate: ["participants", "participants.users_permissions_user"]
       });
 
-      console.log(teams.participants);
-
       const manager = _.find(teams.participants, (p) => p.role === "manager");
+
+      if(!manager || !manager.users_permissions_user){
+        return {
+          ok: false,
+          message: 'manager not found for this team'
+        }
+      }
 
       return {
         data: {

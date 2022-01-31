@@ -93,6 +93,14 @@
       "relation": "manyToOne",
       "target": "api::team.team",
       "inversedBy": "tasks"
+    },
+    "medal": {
+      "type": "enumeration",
+      "enum": [
+        "light",
+        "rocket",
+        "jet"
+      ]
     }
   }
 }
