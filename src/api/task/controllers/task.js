@@ -47,7 +47,7 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
   async finish(ctx) {
     const { id } = ctx.request.params;
     const currentTask = await strapi
-      .service("api::task.task")
+      .query("api::task.task")
       .findOne({
         where: {
           id
