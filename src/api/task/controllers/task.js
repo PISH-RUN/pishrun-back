@@ -135,7 +135,8 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
       .query("api::task.task")
       .update({
         data: {
-          status: "failed"
+          status: "failed",
+          finishedAt: new Date(),
         },
         where: {
           id
