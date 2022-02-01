@@ -55,7 +55,10 @@ module.exports = createCoreController(
           firstName: member.users_permissions_user?.firstName,
           lastName: member.users_permissions_user?.lastName,
           mobile: member.users_permissions_user?.mobile,
-          tasks: tasksStatusCounter(member.tasks),
+          tasks: {
+            total: member.tasks.total,
+            ...tasksStatusCounter(member.tasks),
+          },
           taskState: taskStatus(member.tasks || []),
           discussions: member.discussions?.length || 0
         }))
