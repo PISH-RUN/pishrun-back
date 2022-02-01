@@ -71,4 +71,6 @@ function taskStatus(tasks) {
 
     return passedTime / inProgress.estimation;
   }
+
+  return false;
 }
