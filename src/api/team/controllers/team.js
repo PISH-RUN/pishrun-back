@@ -20,18 +20,18 @@ module.exports = createCoreController(
 
       const manager = _.find(teams.participants, (p) => p.role === "manager");
 
-      if(!manager || !manager.users_permissions_user){
+      if(!manager || !manager.users_permissions_user) {
         return {
           ok: false,
-          message: 'manager not found for this team'
-        }
+          message: "manager not found for this team"
+        };
       }
 
       return {
         data: {
           firstName: manager.users_permissions_user.firstName,
           lastName: manager.users_permissions_user.lastName,
-          mobile: manager.users_permissions_user.mobile,
+          mobile: manager.users_permissions_user.mobile
         }
       };
     },
@@ -44,12 +44,31 @@ module.exports = createCoreController(
             id
           }
         },
-        populate: ["users_permissions_user", "tasks", "discussion"]
+        populate: ["users_permissions_user", "tasks", "discussions"]
       });
 
       return {
-        data: teamMembers
+        data: teamMembers.map(member => ({
+          role: member.role,
+          enteredAt: member.enteredAt,
+          exitedAt: member.exitedAt,
+          firstName: member.users_permissions_user?.firstName,
+          lastName: member.users_permissions_user?.lastName,
+          mobile: member.users_permissions_user?.mobile,
+          tasks: member.tasks,
+          taskState: taskStatus(member.tasks || []),
+          discussions: member.discussions?.length || 0
+        }))
       };
     }
   })
 );
+
+function taskStatus(tasks) {
+  const inProgress = _.find(tasks, { status: "inprogress" });
+  if(inProgress) {
+    const passedTime = Date.now() - new Date(inProgress.beganAt).getTime();
+
+    return passedTime / inProgress.estimation;
+  }
+}
