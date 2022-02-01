@@ -34,6 +34,22 @@ module.exports = createCoreController(
           mobile: manager.users_permissions_user.mobile,
         }
       };
+    },
+
+    members: async (ctx, next) => {
+      const { id } = ctx.request.params;
+      let teamMembers = await strapi.db.query("api::participant.participant").findMany({
+        where: {
+          team: {
+            id
+          }
+        },
+        populate: ["users_permissions_user", "tasks", "discussion"]
+      });
+
+      return {
+        data: teamMembers
+      };
     }
   })
 );
