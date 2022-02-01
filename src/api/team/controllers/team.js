@@ -55,6 +55,7 @@ module.exports = createCoreController(
           firstName: member.users_permissions_user?.firstName,
           lastName: member.users_permissions_user?.lastName,
           mobile: member.users_permissions_user?.mobile,
+          tasks: tasksStatusCounter(member.tasks),
           taskState: taskStatus(member.tasks || []),
           discussions: member.discussions?.length || 0
         }))
@@ -62,6 +63,23 @@ module.exports = createCoreController(
     }
   })
 );
+
+function tasksStatusCounter(tasks) {
+  return tasks.reduce(
+    (acc, curr) => {
+      if(curr.status in acc) {
+        acc[curr.status] += 1;
+      }
+      return acc;
+    },
+    {
+      todo: 0,
+      inprogress: 0,
+      failed: 0,
+      done: 0
+    }
+  );
+}
 
 function taskStatus(tasks) {
   const inProgress = _.find(tasks, { status: "inprogress" });
