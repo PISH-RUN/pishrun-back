@@ -56,14 +56,15 @@ module.exports = createCoreController(
     },
 
     async add(ctx) {
-      const { label } = ctx.request.body;
+      const { label, team } = ctx.request.body;
 
       const participant = await strapi.db
         .query("api::participant.participant")
         .create({
           data: {
             role: "teammate",
-            label
+            label,
+            team
           }
         });
 
