@@ -4,7 +4,8 @@
   "info": {
     "singularName": "storage",
     "pluralName": "storages",
-    "displayName": "storage"
+    "displayName": "storage",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
