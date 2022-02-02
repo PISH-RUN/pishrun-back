@@ -13,11 +13,11 @@ module.exports = createCoreController(
       const { participant } = await strapi
         .service("api::participant.participant")
         .currentParticipant(ctx.state.user.id, {
-          populate: ["team", "team.event", "tasks", "seat", "seat.hall", "users_permissions_user"],
+          populate: ["team", "team.event", "tasks", "seat", "seat.hall", "users_permissions_user"]
         });
 
       return {
-        data: participant,
+        data: participant
       };
     },
 
@@ -25,11 +25,11 @@ module.exports = createCoreController(
       const { slug } = ctx.request.body;
       const event = await strapi.service("api::event.event").currentEvent({
         where: {
-          slug,
-        },
+          slug
+        }
       });
 
-      if (!event) {
+      if(!event) {
         return null;
       }
 
@@ -37,7 +37,7 @@ module.exports = createCoreController(
         .service("api::participant.participant")
         .participant(ctx.state.user.id, event.id);
 
-      if (!participant || participant.enteredAt) {
+      if(!participant || participant.enteredAt) {
         return null;
       }
 
@@ -45,14 +45,31 @@ module.exports = createCoreController(
         .query("api::participant.participant")
         .update({
           data: {
-            enteredAt: new Date(),
+            enteredAt: new Date()
           },
           where: {
-            id: participant.id,
-          },
+            id: participant.id
+          }
         });
 
       return { data: participant };
     },
+
+    async add(ctx) {
+      const { label } = ctx.request.body;
+
+      const participant = await strapi.db
+        .query("api::participant.participant")
+        .create({
+          data: {
+            role: "teammate",
+            label
+          }
+        });
+
+      return {
+        data: participant
+      };
+    }
   })
 );

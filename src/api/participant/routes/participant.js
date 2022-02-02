@@ -12,5 +12,10 @@ module.exports = {
       path: "/participant/enter",
       handler: "participant.enter",
     },
+    {
+      method: "POST",
+      path: "/participant/add",
+      handler: "participant.add",
+    },
   ],
 };
