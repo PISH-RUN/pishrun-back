@@ -17,6 +17,9 @@
     },
     "value": {
       "type": "text"
+    },
+    "json": {
+      "type": "json"
     }
   }
 }
