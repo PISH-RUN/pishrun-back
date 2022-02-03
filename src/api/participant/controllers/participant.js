@@ -4,6 +4,8 @@
  *  participant controller
  */
 
+const _ = require("lodash");
+
 const { createCoreController } = require("@strapi/strapi").factories;
 
 const halls = {
@@ -27,6 +29,55 @@ module.exports = createCoreController(
 
       return {
         data: participant
+      };
+    },
+
+    async all(ctx) {
+      const { event } = await strapi
+        .service("api::participant.participant")
+        .currentParticipant(ctx.state.user.id, {
+          populate: ["team", "team.event", "tasks", "seat", "seat.hall", "users_permissions_user"]
+        });
+
+      const participants = await strapi.db
+        .query("api::participant.participant")
+        .findMany({
+          where: {
+            team: {
+              event: {
+                id: event.id
+              }
+            }
+          },
+          populate: ["team", "users_permissions_user", "users_permissions_user.avatar"]
+        });
+
+      const teams = await strapi.db
+        .query("api::team.team")
+        .findMany({
+          where: {
+            event: {
+              id: event.id
+            }
+          }
+        });
+
+      return {
+        data: {
+          teams,
+          participantsState: {
+            total: participants.length,
+            present: _.filter(participants, p => p.enteredAt !== null).length,
+            absent: _.filter(participants, p => p.enteredAt === null).length
+          },
+          participants: participants.map(participant => ({
+            enteredAt: participant.enteredAt,
+            firstName: participant.users_permissions_user?.firstName,
+            lastName: participant.users_permissions_user?.lastName,
+            avatar: participant.users_permissions_user?.avatar?.url,
+            team: participant.team.id
+          }))
+        }
       };
     },
 
