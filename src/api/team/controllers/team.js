@@ -15,7 +15,7 @@ module.exports = createCoreController(
       const { id } = ctx.request.params;
       let teams = await strapi.db.query("api::team.team").findOne({
         where: { id },
-        populate: ["participants", "participants.users_permissions_user"]
+        populate: ["participants", "participants.users_permissions_user", "participants.users_permissions_user.avatar"]
       });
 
       const manager = _.find(teams.participants, (p) => p.role === "manager");
@@ -31,7 +31,8 @@ module.exports = createCoreController(
         data: {
           firstName: manager.users_permissions_user.firstName,
           lastName: manager.users_permissions_user.lastName,
-          mobile: manager.users_permissions_user.mobile
+          mobile: manager.users_permissions_user.mobile,
+          avatar: manager.users_permissions_user.avatar
         }
       };
     },
@@ -42,7 +43,8 @@ module.exports = createCoreController(
         where: {
           team: {
             id
-          }
+          },
+          role: "teammate"
         },
         populate: ["users_permissions_user", "tasks", "discussions"]
       });
@@ -57,7 +59,7 @@ module.exports = createCoreController(
           mobile: member.users_permissions_user?.mobile,
           tasks: {
             total: member.tasks.length,
-            ...tasksStatusCounter(member.tasks),
+            ...tasksStatusCounter(member.tasks)
           },
           taskState: taskStatus(member.tasks || []),
           discussions: member.discussions?.length || 0
@@ -87,9 +89,9 @@ function tasksStatusCounter(tasks) {
 function taskStatus(tasks) {
   const inProgress = _.find(tasks, { status: "inprogress" });
   if(inProgress) {
-    const passedTime = Date.now() - new Date(inProgress.beganAt).getTime();
+    const passedTime = (Date.now() - new Date(inProgress.beganAt).getTime()) / 1000 / 60;
 
-    return passedTime / inProgress.estimation;
+    return (passedTime / inProgress.estimation) * 100;
   }
 
   return false;
