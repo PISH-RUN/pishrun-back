@@ -13,7 +13,7 @@ const { sanitize } = utils;
 const { ApplicationError, ValidationError, ForbiddenError } = utils.errors;
 
 const formatError = error => [
-  { messages: [{ id: error.id, message: error.message, field: error.field }] },
+  { messages: [{ id: error.id, message: error.message, field: error.field }] }
 ];
 
 const sanitizeUser = (user, ctx) => {
@@ -80,7 +80,9 @@ const isAdmin = async (user) => {
   const userParticipants = await strapi.query("api::participant.participant")
     .findMany({
       where: {
-        user: user.id
+        users_permissions_user: {
+          id: user.id
+        }
       },
       populate: ["team", "team.event"]
     });
@@ -163,15 +165,15 @@ module.exports = {
         .findOne({ where: { mobile: params.mobile } });
 
       const validPassword = strapi.plugins[
-        'users-permissions'
+        "users-permissions"
         ].services.user.validatePassword(params.password, user.password);
 
       if(!validPassword) {
         return ctx.badRequest(
           null,
           formatError({
-            id: 'Auth.form.error.invalid',
-            message: 'Identifier or password invalid.',
+            id: "Auth.form.error.invalid",
+            message: "Identifier or password invalid."
           })
         );
       }
@@ -201,7 +203,7 @@ module.exports = {
       });
     }
 
-    if(params.scope === 'portal') {
+    if(params.scope === "portal") {
       const is_admin = await isAdmin(user);
       if(!is_admin) {
         throw new ForbiddenError();
