@@ -10,7 +10,11 @@ const tokenExpiryMinutes = 15;
 const tokenRequestPeriod = 0;
 
 const { sanitize } = utils;
-const { ApplicationError, ValidationError } = utils.errors;
+const { ApplicationError, ValidationError, ForbiddenError } = utils.errors;
+
+const formatError = error => [
+  { messages: [{ id: error.id, message: error.message, field: error.field }] },
+];
 
 const sanitizeUser = (user, ctx) => {
   const { auth } = ctx.state;
@@ -68,6 +72,35 @@ const createUser = async (userData) => {
   }
 };
 
+const isAdmin = async (user) => {
+  if(user.admin) {
+    return true;
+  }
+
+  const userParticipants = await strapi.query("api::participant.participant")
+    .findMany({
+      where: {
+        user: user.id
+      },
+      populate: ["team", "team.event"]
+    });
+
+  if(!userParticipants || userParticipants.length === 0) {
+    return false;
+  }
+
+  let activeEvent = false;
+  let activeParticipant = false;
+  userParticipants.map(p => {
+    if(!activeEvent && p.team && p.team.event && p.team.event.active) {
+      activeEvent = p.team.event;
+      activeParticipant = p;
+    }
+  });
+
+  return !!(activeEvent && (activeParticipant.hr || activeParticipant.role === "teammate"));
+};
+
 module.exports = {
   async otp(ctx) {
     await validateCreateUserBody(ctx.request.body);
@@ -79,17 +112,17 @@ module.exports = {
       .findOne({ where: { mobile } });
 
     if(!user) {
-      user = await createUser({mobile});
+      user = await createUser({ mobile });
     }
 
     if(mobile.startsWith("+98966666")) {
       await updateUser(user.id, {
-        otp: '6666',
+        otp: "6666"
       });
 
       return {
         ok: true
-      }
+      };
     }
 
     await sendOtp(user);
@@ -122,30 +155,58 @@ module.exports = {
 
   async login(ctx) {
     const params = ctx.request.body;
+    let user;
 
-    const query = {
-      mobile: params.mobile,
-      otp: params.token
-    };
+    if(params.password) {
+      user = await strapi
+        .query("plugin::users-permissions.user")
+        .findOne({ where: { mobile: params.mobile } });
 
-    const user = await strapi
-      .query("plugin::users-permissions.user")
-      .findOne({ where: query });
+      const validPassword = strapi.plugins[
+        'users-permissions'
+        ].services.user.validatePassword(params.password, user.password);
 
-    if(
-      !user ||
-      differenceInMinutes(new Date(), parseISO(user.otpExpiresAt)) >
-      tokenExpiryMinutes
-    ) {
-      throw new ValidationError("Invalid Credentials");
+      if(!validPassword) {
+        return ctx.badRequest(
+          null,
+          formatError({
+            id: 'Auth.form.error.invalid',
+            message: 'Identifier or password invalid.',
+          })
+        );
+      }
+    } else {
+      const query = {
+        mobile: params.mobile,
+        otp: params.token
+      };
+
+      user = await strapi
+        .query("plugin::users-permissions.user")
+        .findOne({ where: query });
+
+      if(
+        !user ||
+        differenceInMinutes(new Date(), parseISO(user.otpExpiresAt)) >
+        tokenExpiryMinutes
+      ) {
+        throw new ValidationError("Invalid Credentials");
+      }
+
+      await updateUser(user.id, {
+        otp: null,
+        registered: true,
+        otpSentAt: null,
+        otpExpiresAt: null
+      });
     }
 
-    await updateUser(user.id, {
-      otp: null,
-      registered: true,
-      otpSentAt: null,
-      otpExpiresAt: null
-    });
+    if(params.scope === 'portal') {
+      const is_admin = await isAdmin(user);
+      if(!is_admin) {
+        throw new ForbiddenError();
+      }
+    }
 
     ctx.send({
       jwt: getService("jwt").issue({

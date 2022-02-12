@@ -52,6 +52,9 @@
       "relation": "oneToOne",
       "target": "api::task.task",
       "mappedBy": "event"
+    },
+    "active": {
+      "type": "boolean"
     }
   }
 }

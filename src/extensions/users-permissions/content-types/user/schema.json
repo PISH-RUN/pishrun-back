@@ -124,6 +124,12 @@
     "registered": {
       "type": "boolean",
       "default": false
+    },
+    "admin": {
+      "type": "boolean"
+    },
+    "password": {
+      "type": "password"
     }
   }
 }

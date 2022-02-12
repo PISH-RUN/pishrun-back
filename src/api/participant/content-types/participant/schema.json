@@ -58,6 +58,9 @@
     },
     "label": {
       "type": "string"
+    },
+    "hr": {
+      "type": "boolean"
     }
   }
 }
