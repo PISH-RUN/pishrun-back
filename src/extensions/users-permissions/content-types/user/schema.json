@@ -131,7 +131,7 @@
     "password": {
       "type": "password"
     },
-    "fcm_token": {
+    "fcmToken": {
       "type": "text"
     }
   }
