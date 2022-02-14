@@ -72,6 +72,25 @@ const createUser = async (userData) => {
   }
 };
 
+const createUsers = async (usersData) => {
+  const advanced = await strapi
+    .store({ type: "plugin", name: "users-permissions", key: "advanced" })
+    .get();
+
+  const defaultRole = await strapi
+    .query("plugin::users-permissions.role")
+    .findOne({ where: { type: advanced.default_role } });
+
+  try {
+    return await Promise.all(usersData.map(async user => {
+      return await getService("user")
+        .add({ ...user, role: defaultRole.id });
+    }))
+  } catch (error) {
+    throw new ApplicationError(error.message);
+  }
+};
+
 const isAdmin = async (user) => {
   if(user.admin) {
     return true;
@@ -153,6 +172,17 @@ module.exports = {
 
     ctx.res.statusCode = 422;
     return ctx.res.end();
+  },
+
+  async addUsers(ctx) {
+    const data = ctx.request.body.data;
+
+    const users = await createUsers(data);
+
+    return {
+      data: users,
+      ok: true
+    };
   },
 
   async login(ctx) {

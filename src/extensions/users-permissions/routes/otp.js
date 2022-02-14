@@ -13,6 +13,15 @@ module.exports = {
     },
     {
       method: "POST",
+      path: "/auth/add-users",
+      handler: "auth.addUsers",
+      config: {
+        prefix: "",
+        middlewares: ["plugin::users-permissions.rateLimit"],
+      },
+    },
+    {
+      method: "POST",
       path: "/auth/otp",
       handler: "auth.otp",
       config: {
