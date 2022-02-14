@@ -7,6 +7,8 @@
 const _ = require("lodash");
 
 const { createCoreController } = require("@strapi/strapi").factories;
+const utils = require("@strapi/utils");
+const { NotFoundError } = utils.errors;
 
 const halls = {
   HT: 1,
@@ -144,6 +146,56 @@ module.exports = createCoreController(
 
       return {
         data: true
+      };
+    },
+
+    async accept(ctx) {
+      let { participant } = await strapi
+        .service("api::participant.participant")
+        .currentParticipant(ctx.state.user.id);
+
+      if(!participant) {
+        throw new NotFoundError("user participant not found")
+      }
+
+      participant = await strapi.db
+        .query("api::participant.participant")
+        .update({
+          data: {
+            state: "accepted"
+          },
+          where: {
+            id: participant.id
+          }
+        });
+
+      return {
+        data: participant
+      };
+    },
+
+    async reject(ctx) {
+      let { participant } = await strapi
+        .service("api::participant.participant")
+        .currentParticipant(ctx.state.user.id);
+
+      if(!participant) {
+        throw new NotFoundError("user participant not found")
+      }
+
+      participant = await strapi.db
+        .query("api::participant.participant")
+        .update({
+          data: {
+            state: "accepted"
+          },
+          where: {
+            id: participant.id
+          }
+        });
+
+      return {
+        data: participant
       };
     }
   })

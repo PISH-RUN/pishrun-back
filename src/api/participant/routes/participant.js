@@ -22,5 +22,15 @@ module.exports = {
       path: "/participants",
       handler: "participant.all",
     },
+    {
+      method: "POST",
+      path: "/participant/accept",
+      handler: "participant.accept",
+    },
+    {
+      method: "POST",
+      path: "/participant/reject",
+      handler: "participant.reject",
+    },
   ],
 };

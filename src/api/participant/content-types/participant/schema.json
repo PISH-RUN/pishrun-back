@@ -62,8 +62,13 @@
     "hr": {
       "type": "boolean"
     },
-    "accepted": {
-      "type": "boolean"
+    "state": {
+      "type": "enumeration",
+      "enum": [
+        "invited",
+        "accepted",
+        "rejected"
+      ]
     }
   }
 }
