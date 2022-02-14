@@ -10,5 +10,13 @@ module.exports = {
         prefix: "",
       },
     },
+    {
+      method: "GET",
+      path: "/admin/me",
+      handler: "user.adminMe",
+      config: {
+        prefix: "",
+      },
+    },
   ],
 };

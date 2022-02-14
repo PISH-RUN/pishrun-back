@@ -45,4 +45,15 @@ module.exports = {
 
     ctx.body = await sanitizeOutput(user, ctx);
   },
+  async adminMe(ctx) {
+    const { participant } = await strapi
+      .service("api::participant.participant")
+      .currentParticipant(ctx.state.user.id, {
+        populate: ["team", "team.event", "team.tasks", "tasks", "seat", "seat.hall", "users_permissions_user", "users_permissions_user.avatar"]
+      });
+
+    return {
+      data: participant
+    };
+  },
 };

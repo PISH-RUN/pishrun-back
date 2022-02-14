@@ -31,6 +31,7 @@ const updateUserBodySchema = yup
     fieldStudy: yup.string().nullable(),
     abilities: yup.string().nullable(),
     equipment: yup.string().nullable(),
+    fcmToken: yup.string().nullable(),
     children: yup.number().integer().nullable(),
     linkedin: yup.string().url().nullable(),
     twitter: yup.string().url().nullable(),

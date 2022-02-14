@@ -11,7 +11,7 @@ const { createCoreController } = require("@strapi/strapi").factories;
 module.exports = createCoreController(
   "api::team.team",
   ({ strapi }) => ({
-    manager: async (ctx, next) => {
+    manager: async (ctx) => {
       const { id } = ctx.request.params;
       let teams = await strapi.db.query("api::team.team").findOne({
         where: { id },
@@ -37,7 +37,7 @@ module.exports = createCoreController(
       };
     },
 
-    members: async (ctx, next) => {
+    members: async (ctx) => {
       const { id } = ctx.request.params;
       let teamMembers = await strapi.db.query("api::participant.participant").findMany({
         where: {
@@ -63,6 +63,64 @@ module.exports = createCoreController(
           },
           taskState: taskStatus(member.tasks || []),
           discussions: member.discussions?.length || 0
+        }))
+      };
+    },
+    adminTeams: async (ctx) => {
+      const { event } = await strapi
+        .service("api::participant.participant")
+        .currentParticipant(ctx.state.user.id);
+
+      let teams = await strapi.db.query("api::team.team").findMany({
+        where: {
+          event: {
+            id: event.id
+          }
+        },
+        populate: ["participants", "participants.users_permissions_user", "tasks"]
+      });
+
+      return {
+        data: teams.map(team => {
+          const manager = team.participants.find(p => p.role === "manager");
+          return {
+            ...team,
+            participants: team.participants.map(p => ({ ...p, user: p.users_permissions_user })),
+            manager: manager ? {
+              ...manager,
+              user: manager.users_permissions_user
+            } : undefined
+          };
+        })
+      };
+    },
+    adminTeam: async (ctx) => {
+      console.log(ctx)
+      const { participant } = await strapi
+        .service("api::participant.participant")
+        .currentParticipant(ctx.state.user.id, {
+          populate: ['team']
+        });
+
+      let teamMembers = await strapi.db.query("api::participant.participant").findMany({
+        where: {
+          team: {
+            id: participant.team.id
+          },
+          role: "teammate"
+        },
+        populate: ["users_permissions_user", "tasks", "discussions"]
+      });
+
+      return {
+        data: teamMembers.map(member => ({
+          ...member,
+          user: member.users_permissions_user,
+          tasksStats: {
+            total: member.tasks.length,
+            ...tasksStatusCounter(member.tasks)
+          },
+          taskState: taskStatus(member.tasks || [])
         }))
       };
     }
