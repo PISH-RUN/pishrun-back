@@ -130,6 +130,9 @@
     },
     "password": {
       "type": "password"
+    },
+    "fcm_token": {
+      "type": "text"
     }
   }
 }
