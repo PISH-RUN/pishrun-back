@@ -187,7 +187,7 @@ module.exports = createCoreController(
         .query("api::participant.participant")
         .update({
           data: {
-            state: "accepted"
+            state: "rejected"
           },
           where: {
             id: participant.id
