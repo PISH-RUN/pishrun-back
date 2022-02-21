@@ -20,4 +20,24 @@ module.exports = {
       })),
     };
   },
+
+  async findOne(ctx) {
+    const { id } = ctx.request.params;
+    const participant = await strapi
+      .query("api::participant.participant")
+      .findOne({
+        where: {
+          id,
+        },
+        populate: ["users_permissions_user", "tasks"],
+      });
+
+    ctx.body = {
+      data: {
+        ...participant,
+        tasks: participant.tasks,
+        user: participant.users_permissions_user,
+      },
+    };
+  },
 };

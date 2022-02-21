@@ -15,5 +15,13 @@ module.exports = {
         policies: [],
       },
     },
+    {
+      method: "GET",
+      path: "/admin/participants/:id",
+      handler: "admin-participant.findOne",
+      config: {
+        policies: [],
+      },
+    },
   ],
 };
