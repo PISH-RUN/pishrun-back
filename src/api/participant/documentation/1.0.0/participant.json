@@ -803,6 +803,20 @@
                                                                                                 }
                                                                                               }
                                                                                             },
+                                                                                            "specialty": {
+                                                                                              "type": "array",
+                                                                                              "items": {
+                                                                                                "type": "object",
+                                                                                                "properties": {
+                                                                                                  "id": {
+                                                                                                    "type": "string"
+                                                                                                  },
+                                                                                                  "value": {
+                                                                                                    "type": "string"
+                                                                                                  }
+                                                                                                }
+                                                                                              }
+                                                                                            },
                                                                                             "createdAt": {
                                                                                               "type": "string",
                                                                                               "format": "date-time"
@@ -3010,6 +3024,20 @@
                                                                                               }
                                                                                             }
                                                                                           },
+                                                                                          "specialty": {
+                                                                                            "type": "array",
+                                                                                            "items": {
+                                                                                              "type": "object",
+                                                                                              "properties": {
+                                                                                                "id": {
+                                                                                                  "type": "string"
+                                                                                                },
+                                                                                                "value": {
+                                                                                                  "type": "string"
+                                                                                                }
+                                                                                              }
+                                                                                            }
+                                                                                          },
                                                                                           "createdAt": {
                                                                                             "type": "string",
                                                                                             "format": "date-time"
@@ -5133,6 +5161,20 @@
                                                                                                       }
                                                                                                     }
                                                                                                   }
+                                                                                                }
+                                                                                              }
+                                                                                            }
+                                                                                          },
+                                                                                          "specialty": {
+                                                                                            "type": "array",
+                                                                                            "items": {
+                                                                                              "type": "object",
+                                                                                              "properties": {
+                                                                                                "id": {
+                                                                                                  "type": "string"
+                                                                                                },
+                                                                                                "value": {
+                                                                                                  "type": "string"
                                                                                                 }
                                                                                               }
                                                                                             }
@@ -7264,6 +7306,20 @@
                                                                                               }
                                                                                             }
                                                                                           },
+                                                                                          "specialty": {
+                                                                                            "type": "array",
+                                                                                            "items": {
+                                                                                              "type": "object",
+                                                                                              "properties": {
+                                                                                                "id": {
+                                                                                                  "type": "string"
+                                                                                                },
+                                                                                                "value": {
+                                                                                                  "type": "string"
+                                                                                                }
+                                                                                              }
+                                                                                            }
+                                                                                          },
                                                                                           "createdAt": {
                                                                                             "type": "string",
                                                                                             "format": "date-time"
@@ -9365,6 +9421,20 @@
                                                                                                       }
                                                                                                     }
                                                                                                   }
+                                                                                                }
+                                                                                              }
+                                                                                            }
+                                                                                          },
+                                                                                          "specialty": {
+                                                                                            "type": "array",
+                                                                                            "items": {
+                                                                                              "type": "object",
+                                                                                              "properties": {
+                                                                                                "id": {
+                                                                                                  "type": "string"
+                                                                                                },
+                                                                                                "value": {
+                                                                                                  "type": "string"
                                                                                                 }
                                                                                               }
                                                                                             }
@@ -11492,6 +11562,20 @@
                                                                                                       }
                                                                                                     }
                                                                                                   }
+                                                                                                }
+                                                                                              }
+                                                                                            }
+                                                                                          },
+                                                                                          "specialty": {
+                                                                                            "type": "array",
+                                                                                            "items": {
+                                                                                              "type": "object",
+                                                                                              "properties": {
+                                                                                                "id": {
+                                                                                                  "type": "string"
+                                                                                                },
+                                                                                                "value": {
+                                                                                                  "type": "string"
                                                                                                 }
                                                                                               }
                                                                                             }

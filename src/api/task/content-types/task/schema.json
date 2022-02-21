@@ -101,6 +101,12 @@
       "relation": "oneToMany",
       "target": "api::discussion.discussion",
       "mappedBy": "task"
+    },
+    "specialty": {
+      "displayName": "arrayOfString",
+      "type": "component",
+      "repeatable": true,
+      "component": "basics.array-of-string"
     }
   }
 }

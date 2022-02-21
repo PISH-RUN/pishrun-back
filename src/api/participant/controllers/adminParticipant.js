@@ -2,23 +2,22 @@
 
 module.exports = {
   async all(ctx) {
-    const participants = await strapi.entityService
-      .findMany(
-        "api::participant.participant",
-        {
-          filters: {
-            role: 'teammate'
-          },
-          populate: ["users_permissions_user"]
-        }
-      );
+    const participants = await strapi.entityService.findMany(
+      "api::participant.participant",
+      {
+        filters: {
+          role: "teammate",
+        },
+        populate: ["users_permissions_user", "tasks"],
+      }
+    );
 
     ctx.body = {
-      data: participants.map(p => ({
+      data: participants.map((p) => ({
         ...p,
         users_permissions_user: undefined,
-        user: p.users_permissions_user
-      }))
+        user: p.users_permissions_user,
+      })),
     };
-  }
+  },
 };

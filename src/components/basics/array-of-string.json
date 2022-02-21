@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_basics_array_of_strings",
+  "info": {
+    "displayName": "arrayOfString",
+    "icon": "list"
+  },
+  "options": {},
+  "attributes": {
+    "value": {
+      "type": "string"
+    }
+  }
+}
