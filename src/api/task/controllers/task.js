@@ -189,24 +189,5 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
         avatar: participant.users_permissions_user?.avatar
       }
     };
-  },
-
-  async adminTasks() {
-    const tasks = await strapi.db
-      .query("api::task.task")
-      .findMany({
-        populate: ["team", "event", "participant", "participant.users_permissions_user", "participant.users_permissions_user.avatar"]
-      });
-
-    return {
-      data: tasks.map(t => ({
-        ...t,
-        participant: {
-          ...t.participant,
-          user: t.participant.users_permissions_user,
-          users_permissions_user: undefined
-        }
-      }))
-    };
   }
 }));

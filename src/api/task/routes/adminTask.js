@@ -10,9 +10,27 @@ module.exports = {
       },
     },
     {
+      method: "GET",
+      path: "/admin/tasks/:id",
+      handler: "admin-task.findOne",
+      config: {
+        policies: [],
+        middlewares: [],
+      },
+    },
+    {
       method: "POST",
       path: "/admin/tasks",
       handler: "task.create",
+      config: {
+        policies: [],
+        middlewares: [],
+      },
+    },
+    {
+      method: "PUT",
+      path: "/admin/tasks/:id",
+      handler: "task.update",
       config: {
         policies: [],
         middlewares: [],
