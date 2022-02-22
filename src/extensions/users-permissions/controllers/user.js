@@ -43,17 +43,28 @@ module.exports = {
       { populate: ["avatar", "referredUsers"] }
     );
 
-    ctx.body = await sanitizeOutput(user, ctx);
+    const result = await sanitizeOutput(user, ctx);
+
+    ctx.body = { ...result, hasPassword: user.password != null };
   },
   async adminMe(ctx) {
     const { participant } = await strapi
       .service("api::participant.participant")
       .currentParticipant(ctx.state.user.id, {
-        populate: ["team", "team.event", "team.tasks", "tasks", "seat", "seat.hall", "users_permissions_user", "users_permissions_user.avatar"]
+        populate: [
+          "team",
+          "team.event",
+          "team.tasks",
+          "tasks",
+          "seat",
+          "seat.hall",
+          "users_permissions_user",
+          "users_permissions_user.avatar",
+        ],
       });
 
     return {
-      data: participant
+      data: participant,
     };
   },
 };
