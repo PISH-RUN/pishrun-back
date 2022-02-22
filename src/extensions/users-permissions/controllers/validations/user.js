@@ -7,8 +7,7 @@ const createUserBodySchema = yup.object().shape({
     .string()
     .matches(/^\+989\d{9}$/)
     .required(),
-  referredBy: yup
-    .number(),
+  referredBy: yup.number(),
 });
 
 const updateUserBodySchema = yup
@@ -26,6 +25,7 @@ const updateUserBodySchema = yup
       .nullable(),
     firstName: yup.string().nullable(),
     lastName: yup.string().nullable(),
+    password: yup.string().nullable(),
     birthdate: yup.string().nullable(),
     degree: yup.string().nullable(),
     fieldStudy: yup.string().nullable(),
