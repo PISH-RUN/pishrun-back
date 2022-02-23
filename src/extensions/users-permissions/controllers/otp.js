@@ -119,7 +119,7 @@ const isAdmin = async (user) => {
     }
   });
 
-  return !!(activeEvent && (activeParticipant.hr || activeParticipant.role === "teammate"));
+  return !!(activeEvent && (activeParticipant.hr || activeParticipant.role === "manager"));
 };
 
 module.exports = {
