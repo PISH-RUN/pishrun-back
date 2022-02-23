@@ -3,6 +3,7 @@
 const { getService } = require("../utils");
 const { validateUpdateUserBody } = require("./validations/user");
 const utils = require("@strapi/utils");
+const merge = require("lodash/merge");
 const { sanitize } = utils;
 
 const sanitizeOutput = (user, ctx) => {
@@ -65,6 +66,28 @@ module.exports = {
 
     return {
       data: participant,
+    };
+  },
+  async adminUsers(ctx) {
+    if (!ctx.state.user) {
+      return ctx.unauthorized();
+    }
+
+    ctx.query = merge(ctx.query, {
+      populate: [
+        "participants", "participants.team", "participants.team.event"
+      ],
+    });
+
+    const { results, pagination } = await strapi.entityService
+      .findPage("plugin::users-permissions.user", ctx.query);
+
+    return {
+      data: results.map(r => ({
+        ...r,
+        activeParticipant: r.participants.find(p => p?.team?.event?.active)
+      })),
+      pagination
     };
   },
 };
