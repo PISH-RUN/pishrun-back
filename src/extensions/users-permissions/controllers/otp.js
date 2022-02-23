@@ -85,7 +85,7 @@ const createUsers = async (usersData) => {
     return await Promise.all(usersData.map(async user => {
       return await getService("user")
         .add({ ...user, role: defaultRole.id });
-    }))
+    }));
   } catch (error) {
     throw new ApplicationError(error.message);
   }
@@ -119,7 +119,9 @@ const isAdmin = async (user) => {
     }
   });
 
-  return !!(activeEvent && (activeParticipant.hr || activeParticipant.role === "manager"));
+  if(activeParticipant.hr) return true;
+
+  return !!(activeEvent && activeParticipant.role === "manager");
 };
 
 module.exports = {
