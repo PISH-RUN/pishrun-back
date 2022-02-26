@@ -77,7 +77,7 @@ module.exports = createCoreController(
             id: event.id
           }
         },
-        populate: ["participants", "participants.users_permissions_user", "tasks"]
+        populate: ["participants", "participants.users_permissions_user", "tasks", "tasks.participant"]
       });
 
       return {
@@ -95,7 +95,6 @@ module.exports = createCoreController(
       };
     },
     adminTeam: async (ctx) => {
-      console.log(ctx)
       const { participant } = await strapi
         .service("api::participant.participant")
         .currentParticipant(ctx.state.user.id, {

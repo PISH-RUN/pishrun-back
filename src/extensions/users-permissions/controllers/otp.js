@@ -107,7 +107,7 @@ const isAdmin = async (user) => {
     });
 
   if(!userParticipants || userParticipants.length === 0) {
-    return false;
+    throw new ForbiddenError('Your are not a participant');
   }
 
   let activeEvent = false;
@@ -119,9 +119,12 @@ const isAdmin = async (user) => {
     }
   });
 
-  if(activeParticipant.hr) return true;
+  if(activeParticipant.hr) return true
+  if((activeEvent && activeParticipant.role === "manager")) return true
 
-  return !!(activeEvent && activeParticipant.role === "manager");
+  if(!activeParticipant) throw new ForbiddenError('There is no active event for you')
+
+  throw new ForbiddenError('Access Denied')
 };
 
 module.exports = {

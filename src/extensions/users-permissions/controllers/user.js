@@ -13,6 +13,22 @@ const sanitizeOutput = (user, ctx) => {
   return sanitize.contentAPI.output(user, schema, { auth });
 };
 
+const createUser = async (userData) => {
+  const advanced = await strapi
+    .store({ type: "plugin", name: "users-permissions", key: "advanced" })
+    .get();
+
+  const defaultRole = await strapi
+    .query("plugin::users-permissions.role")
+    .findOne({ where: { type: advanced.default_role } });
+
+  try {
+    return await getService("user").add({ ...userData, role: defaultRole });
+  } catch (error) {
+    throw new ApplicationError(error.message);
+  }
+};
+
 module.exports = {
   async updateMe(ctx) {
     const advancedConfigs = await strapi
@@ -24,6 +40,20 @@ module.exports = {
     const user = await getService("user").fetch({ id });
 
     await validateUpdateUserBody(ctx.request.body);
+
+    let updateData = {
+      ...ctx.request.body,
+    };
+
+    const data = await getService("user").edit(user.id, updateData);
+    const sanitizedData = await sanitizeOutput(data, ctx);
+
+    ctx.send(sanitizedData);
+  },
+  async adminUpdateUser(ctx) {
+    const { id } = ctx.request.params;
+
+    const user = await getService("user").fetch({ id });
 
     let updateData = {
       ...ctx.request.body,
@@ -88,6 +118,18 @@ module.exports = {
         activeParticipant: r.participants.find(p => p?.team?.event?.active)
       })),
       pagination
+    };
+  },
+  async adminAddUser(ctx) {
+    if (!ctx.state.user) {
+      return ctx.unauthorized();
+    }
+    let user = ctx.request.body;
+
+    user = await createUser(user)
+
+    return {
+      data: user
     };
   },
 };
