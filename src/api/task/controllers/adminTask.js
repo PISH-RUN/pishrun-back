@@ -39,6 +39,7 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
     ctx.query = merge(ctx.query, {
       populate: [
         "link",
+        "specialty",
         "team",
         "event",
         "participant",
