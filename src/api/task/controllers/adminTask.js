@@ -15,6 +15,7 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
       },
       populate: [
         "link",
+        "specialty",
         "team",
         "event",
         "participant",
