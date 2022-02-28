@@ -120,7 +120,8 @@ module.exports = ({ strapi }) => ({
           event: {
             id: event.id
           }
-        }
+        },
+        role: "teammate"
       },
       populate: ["users_permissions_user"]
     });
@@ -138,14 +139,22 @@ module.exports = ({ strapi }) => ({
       }
     }));
 
+    let users = await strapi.db.query("plugin::users-permissions.user").findMany({
+      populate: ['participants']
+    });
+
     return {
       data: {
         teams,
+        users: {
+          total: users.length,
+          registered: _.filter(users, u => u.registered === true).length
+        },
         participants: participantCounts,
         event: participant?.team?.event || event,
         team: participant ? {
           tasks: tasksStatusCounter(participant.team.tasks),
-          participants: participantsCounter(participant.team.participants),
+          participants: participantsCounter(_.filter(participant.team.participants, p => p.role === 'teammate')),
           specialty: tasksSpecialtyCounter(participant.team.tasks)
         } : undefined,
         tasks: {
@@ -188,7 +197,6 @@ function teamTasksSpecialtyCounter(participants) {
     });
 
     if(pSpecialty.count > 0) {
-      console.log(pSpecialty, count);
       all[pSpecialty.value] = all[pSpecialty.value] || { participants: 0, hasUser: 0 };
       all[pSpecialty.value].participants += 1;
       if(!!p.users_permissions_user)
@@ -208,6 +216,8 @@ function participantsCounter(participants) {
   participantCounts.absent = participants.length - participantCounts.present;
   participantCounts.hasUser = _.filter(participants, p => p.users_permissions_user && p.users_permissions_user.id).length;
   participantCounts.accepted = _.filter(participants, p => p.state === "accepted").length;
+  participantCounts.userUnknown = _.filter(participants, p => p.state !== "invited" && p.users_permissions_user && p.users_permissions_user.id).length;
+  participantCounts.invited = _.filter(participants, p => p.state === "invited").length;
   participantCounts.total = participants.length;
 
   return participantCounts;

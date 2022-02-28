@@ -29,7 +29,7 @@ module.exports = {
         where: {
           id,
         },
-        populate: ["users_permissions_user", "tasks"],
+        populate: ["users_permissions_user", "tasks", "tasks.specialty"],
       });
 
     ctx.body = {
