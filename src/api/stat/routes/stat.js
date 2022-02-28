@@ -9,5 +9,14 @@ module.exports = {
         middlewares: [],
       },
     },
+    {
+      method: "GET",
+      path: "/admin/stats",
+      handler: "stat.adminStats",
+      config: {
+        policies: [],
+        middlewares: [],
+      },
+    },
   ],
 };

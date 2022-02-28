@@ -84,13 +84,130 @@ module.exports = ({ strapi }) => ({
         }
       }
     };
+  },
+  adminStats: async (ctx, next) => {
+    const event = await strapi
+      .service("api::event.event")
+      .activeEvent();
+
+    const { participant } = await strapi
+      .service("api::participant.participant")
+      .currentParticipant(ctx.state.user.id, {
+        populate: ["team", "team.event", "team.tasks", "team.tasks.specialty", "tasks", "team.participants", "team.participants.users_permissions_user"]
+      });
+
+    let teams = await strapi.db.query("api::team.team").findMany({
+      where: {
+        event: {
+          id: event.id
+        }
+      },
+      populate: ["participants", "participants.users_permissions_user", "participants.tasks", "participants.tasks.specialty", "tasks", "tasks.specialty"]
+    });
+
+    let tasks = await strapi.db.query("api::task.task").findMany({
+      where: {
+        team: {
+          event: event.id
+        }
+      },
+      populate: ["participant", "specialty"]
+    });
+
+    let participants = await strapi.db.query("api::participant.participant").findMany({
+      where: {
+        team: {
+          event: {
+            id: event.id
+          }
+        }
+      },
+      populate: ["users_permissions_user"]
+    });
+
+    let participantCounts = participantsCounter(participants);
+
+    teams = teams.map((team) => ({
+      ...team,
+      specialty: teamTasksSpecialtyCounter(team.participants),
+      participantsCount: team.participants.length,
+      tasksStats: {
+        total: team.tasks.length,
+        totalTime: tasksTotalTime(team.tasks),
+        ...tasksStatusCounter(team.tasks)
+      }
+    }));
+
+    return {
+      data: {
+        teams,
+        participants: participantCounts,
+        event: participant?.team?.event || event,
+        team: participant ? {
+          tasks: tasksStatusCounter(participant.team.tasks),
+          participants: participantsCounter(participant.team.participants),
+          specialty: tasksSpecialtyCounter(participant.team.tasks)
+        } : undefined,
+        tasks: {
+          specialty: tasksSpecialtyCounter(tasks),
+          total: tasks.length,
+          totalTime: tasksTotalTime(tasks),
+          assigned: tasks.filter(t => !!t.participant).length,
+          ...tasksStatusCounter(tasks)
+        }
+      }
+    };
   }
 });
+
+function tasksSpecialtyCounter(tasks) {
+  const all = [];
+  _.map(tasks, t => {
+    t.specialty.map(s => all.push(s.value));
+  });
+
+  return {
+    total: all.length,
+    ..._.countBy(all, t => t)
+  };
+}
+
+function teamTasksSpecialtyCounter(participants) {
+  const all = {};
+  const hasTasks = _.filter(participants, p => !!p.tasks && p.tasks.length > 0);
+  _.map(hasTasks, p => {
+    const pSpecialties = _.map(p.tasks, "specialty");
+    const count = _.countBy(_.flatten(pSpecialties), s => s.value);
+    const pSpecialty = { count: 0, value: "" };
+
+    _.map(count, (count, key) => {
+      if(pSpecialty.count < count) {
+        pSpecialty.count = count;
+        pSpecialty.value = key;
+      }
+    });
+
+    if(pSpecialty.count > 0) {
+      console.log(pSpecialty, count);
+      all[pSpecialty.value] = all[pSpecialty.value] || { participants: 0, hasUser: 0 };
+      all[pSpecialty.value].participants += 1;
+      if(!!p.users_permissions_user)
+        all[pSpecialty.value].hasUser += 1;
+    }
+  });
+
+  return {
+    total: _.filter(participants, p => p.role === "teammate").length,
+    ...all
+  };
+}
 
 function participantsCounter(participants) {
   let participantCounts = {};
   participantCounts.present = _.filter(participants, p => !!p.enteredAt).length;
   participantCounts.absent = participants.length - participantCounts.present;
+  participantCounts.hasUser = _.filter(participants, p => p.users_permissions_user && p.users_permissions_user.id).length;
+  participantCounts.accepted = _.filter(participants, p => p.state === "accepted").length;
   participantCounts.total = participants.length;
 
   return participantCounts;

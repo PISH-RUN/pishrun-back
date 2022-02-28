@@ -21,4 +21,17 @@ module.exports = createCoreService("api::event.event", ({ strapi }) => ({
 
     return event;
   },
+  async activeEvent(cfg = {}) {
+    let config = {
+      where: {
+        active: true,
+      },
+    };
+
+    const event = await strapi.db
+      .query("api::event.event")
+      .findOne(merge(config, cfg));
+
+    return event;
+  },
 }));
