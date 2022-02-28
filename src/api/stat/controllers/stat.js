@@ -214,9 +214,9 @@ function participantsCounter(participants) {
   let participantCounts = {};
   participantCounts.present = _.filter(participants, p => !!p.enteredAt).length;
   participantCounts.absent = participants.length - participantCounts.present;
-  participantCounts.hasUser = _.filter(participants, p => p.users_permissions_user && p.users_permissions_user.id).length;
-  participantCounts.accepted = _.filter(participants, p => p.state === "accepted").length;
-  participantCounts.userUnknown = _.filter(participants, p => p.state !== "invited" && p.users_permissions_user && p.users_permissions_user.id).length;
+  participantCounts.hasUser = _.filter(participants, p => p.users_permissions_user).length;
+  participantCounts.accepted = _.filter(participants, p => p.state === "accepted" && p.users_permissions_user).length;
+  participantCounts.userUnknown = _.filter(participants, p => p.state !== "accepted" && p.users_permissions_user).length;
   participantCounts.invited = _.filter(participants, p => p.state === "invited").length;
   participantCounts.total = participants.length;
 
