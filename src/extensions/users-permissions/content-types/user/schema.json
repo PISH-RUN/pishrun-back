@@ -133,6 +133,12 @@
     },
     "fcmToken": {
       "type": "text"
+    },
+    "province": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
     }
   }
 }
