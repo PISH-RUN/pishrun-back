@@ -105,7 +105,7 @@ module.exports = {
 
     ctx.query = merge(ctx.query, {
       populate: [
-        "participants", "participants.team", "participants.team.event"
+        "referredBy", "participants", "participants.team", "participants.team.event"
       ],
     });
 
