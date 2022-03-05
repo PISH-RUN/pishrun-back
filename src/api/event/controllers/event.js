@@ -14,4 +14,11 @@ module.exports = createCoreController("api::event.event", ({ strapi }) => ({
       data: event,
     };
   },
+  async activeEvent() {
+    const event = await strapi.service("api::event.event").activeEvent();
+
+    return {
+      data: event,
+    };
+  },
 }));

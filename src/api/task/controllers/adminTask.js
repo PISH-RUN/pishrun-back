@@ -11,7 +11,7 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
     const { id } = ctx.request.params;
     const task = await strapi.db.query("api::task.task").findOne({
       where: {
-        id,
+        id
       },
       populate: [
         "link",
@@ -20,8 +20,8 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
         "event",
         "participant",
         "participant.users_permissions_user",
-        "participant.users_permissions_user.avatar",
-      ],
+        "participant.users_permissions_user.avatar"
+      ]
     });
 
     return {
@@ -30,9 +30,9 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
         participant: {
           ...task.participant,
           user: task.participant?.users_permissions_user,
-          users_permissions_user: undefined,
-        },
-      },
+          users_permissions_user: undefined
+        }
+      }
     };
   },
 
@@ -45,8 +45,8 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
         "event",
         "participant",
         "participant.users_permissions_user",
-        "participant.users_permissions_user.avatar",
-      ],
+        "participant.users_permissions_user.avatar"
+      ]
     });
 
     const { results, pagination } = await strapi
@@ -59,10 +59,19 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
         participant: {
           ...t.participant,
           user: t.participant?.users_permissions_user,
-          users_permissions_user: undefined,
-        },
+          users_permissions_user: undefined
+        }
       })),
-      pagination,
+      pagination
     };
   },
+
+  async deleteMany(ctx) {
+    const ids = ctx.request.body.ids;
+
+    if(ids)
+      return await strapi.db.query("api::task.task").deleteMany({ where: { id: { $in: ids } } });
+
+    return false;
+  }
 }));

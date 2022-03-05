@@ -37,6 +37,15 @@ module.exports = {
       },
     },
     {
+      method: "POST",
+      path: "/admin/tasks/bulkDelete",
+      handler: "admin-task.deleteMany",
+      config: {
+        policies: [],
+        middlewares: [],
+      },
+    },
+    {
       method: "DELETE",
       path: "/admin/tasks/:id",
       handler: "task.delete",
