@@ -26,31 +26,14 @@ module.exports = () => ({
 
     console.log(response);
   },
-  async bulk(receptors, messages) {
+  async sendSms(receptor, template, param) {
     const params = new URLSearchParams();
-    params.append("receptor", receptors.join(','));
-    params.append("message", messages.join(','));
-    params.append("linenumber", "1");
+    params.append("receptor", receptor);
+    params.append("template", template);
+    params.append("type", "1");
+    params.append(`param1`, param);
 
-    const url = new URL("v2/sms/send/bulk", baseUrl);
-    const response = await fetch(url.href, {
-      method: "POST",
-      headers: {
-        apiKey,
-      },
-      body: params,
-    });
-
-    console.log(response);
-  },
-  async pair(receptors, message) {
-    const receptorsArray = Array.isArray(receptors) ? receptors : [receptors]
-    const params = new URLSearchParams();
-    params.append("receptor", receptorsArray.join(','));
-    params.append("message", message);
-    params.append("linenumber", "1");
-
-    const url = new URL("v2/sms/send/pair", baseUrl);
+    const url = new URL("v2/verification/send/simple", baseUrl);
     const response = await fetch(url.href, {
       method: "POST",
       headers: {

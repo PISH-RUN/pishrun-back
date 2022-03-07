@@ -7,22 +7,16 @@ const _ = require("lodash");
  */
 
 module.exports = ({ strapi }) => ({
-  bulkSend: async (ctx, next) => {
-    const {receptors, messages} = ctx.request.body;
+  send: async (ctx, next) => {
+    console.log(ctx);
+    const {receptors, template, params} = ctx.request.body;
 
-    await strapi.service("api::sms.sms").bulk(receptors, messages)
-
-    return {
-      ok: true
-    }
-  },
-  pairSend: async (ctx, next) => {
-    const {receptors, message} = ctx.request.body;
-
-    await strapi.service("api::sms.sms").pair(receptors, message)
+    receptors.map((receptor, index) => {
+      strapi.service("api::sms.sms").sendSms(receptor, template, params[index])
+    })
 
     return {
       ok: true
     }
-  },
+  }
 });

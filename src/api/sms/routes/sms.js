@@ -1,18 +1,9 @@
 module.exports = {
   routes: [
     {
-      method: "GET",
-      path: "/admin/sms/bulk",
-      handler: "sms.bulkSend",
-      config: {
-        policies: [],
-        middlewares: []
-      }
-    },
-    {
-      method: "GET",
-      path: "/admin/sms/pair",
-      handler: "sms.pairSend",
+      method: "POST",
+      path: "/admin/sms/send",
+      handler: "sms.send",
       config: {
         policies: [],
         middlewares: []
