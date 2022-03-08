@@ -18,5 +18,18 @@ module.exports = ({ strapi }) => ({
     return {
       ok: true
     }
+  },
+  
+  sendAsanak: async (ctx, next) => {
+    console.log(ctx);
+    const {receptors, messages} = ctx.request.body;
+
+    receptors.map((receptor, index) => {
+      strapi.service("api::sms.sms").sendSmsAsanak(receptor, messages[index])
+    })
+
+    return {
+      ok: true
+    }
   }
 });

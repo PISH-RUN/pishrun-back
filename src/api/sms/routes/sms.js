@@ -8,6 +8,15 @@ module.exports = {
         policies: [],
         middlewares: []
       }
+    },
+    {
+      method: "POST",
+      path: "/admin/sms/asanak",
+      handler: "sms.sendAsanak",
+      config: {
+        policies: [],
+        middlewares: []
+      }
     }
   ]
 };
