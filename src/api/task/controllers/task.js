@@ -13,12 +13,12 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
       .service("api::participant.participant")
       .currentParticipant(ctx.state.user.id);
 
-    if(!participant) {
+    if (!participant) {
       return null;
     }
 
     ctx.query = merge(ctx.query, {
-      filters: { participant: { id: { $eq: participant.id } } }
+      filters: { participant: { id: { $eq: participant.id } } },
     });
 
     return await super.find(ctx);
@@ -27,32 +27,28 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
   async start(ctx) {
     const { id } = ctx.request.params;
 
-    const task = await strapi.db
-      .query("api::task.task")
-      .update({
-        data: {
-          beganAt: new Date(),
-          status: "inprogress"
-        },
-        where: {
-          id
-        }
-      });
+    const task = await strapi.db.query("api::task.task").update({
+      data: {
+        beganAt: new Date(),
+        status: "inprogress",
+      },
+      where: {
+        id,
+      },
+    });
 
     return {
-      data: task
+      data: task,
     };
   },
 
   async finish(ctx) {
     const { id } = ctx.request.params;
-    const currentTask = await strapi
-      .query("api::task.task")
-      .findOne({
-        where: {
-          id
-        }
-      });
+    const currentTask = await strapi.query("api::task.task").findOne({
+      where: {
+        id,
+      },
+    });
 
     let medal = null;
     let start = new Date(currentTask.beganAt);
@@ -61,90 +57,82 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
     duration = duration / 60 / 1000; // convert to minutes
     let taskTime = currentTask.estimation;
 
-    if(duration < taskTime) {
+    if (duration < taskTime) {
       let ratio = duration / taskTime;
-      if(ratio <= 25) {
+      if (ratio <= 25) {
         medal = "light";
-      } else if(ratio <= 50) {
+      } else if (ratio <= 50) {
         medal = "rocket";
-      } else if(ratio <= 75) {
+      } else if (ratio <= 75) {
         medal = "jet";
       }
     }
 
-    const task = await strapi.db
-      .query("api::task.task")
-      .update({
-        data: {
-          finishedAt: new Date(),
-          status: "done",
-          medal
-        },
-        where: {
-          id
-        }
-      });
+    const task = await strapi.db.query("api::task.task").update({
+      data: {
+        finishedAt: new Date(),
+        status: "done",
+        medal,
+      },
+      where: {
+        id,
+      },
+    });
 
     return {
-      data: task
+      data: task,
     };
   },
 
   async suspend(ctx) {
     const { id } = ctx.request.params;
 
-    const task = await strapi.db
-      .query("api::task.task")
-      .update({
-        data: {
-          suspended: true
-        },
-        where: {
-          id
-        }
-      });
+    const task = await strapi.db.query("api::task.task").update({
+      data: {
+        suspended: true,
+      },
+      where: {
+        id,
+      },
+    });
 
     return {
-      data: task
+      data: task,
     };
   },
 
   async unsuspend(ctx) {
     const { id } = ctx.request.params;
 
-    const task = await strapi.db
-      .query("api::task.task")
-      .update({
-        data: {
-          suspended: false
-        },
-        where: {
-          id
-        }
-      });
+    const task = await strapi.db.query("api::task.task").update({
+      data: {
+        suspended: false,
+      },
+      where: {
+        id,
+      },
+    });
 
     return {
-      data: task
+      data: task,
     };
   },
 
   async fail(ctx) {
     const { id } = ctx.request.params;
 
-    const task = await strapi.db
-      .query("api::task.task")
-      .update({
-        data: {
-          status: "failed",
-          finishedAt: new Date()
-        },
-        where: {
-          id
-        }
-      });
+    const task = await strapi.db.query("api::task.task").update({
+      data: {
+        status: "failed",
+        finishedAt: new Date(),
+      },
+      where: {
+        id,
+      },
+    });
 
     return {
-      data: task
+      data: task,
     };
   },
 
@@ -156,14 +144,14 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
       .findMany({
         where: {
           task: {
-            id
-          }
+            id,
+          },
         },
-        populate: ["participant", "participant.users_permissions_user", "task"]
+        populate: ["participant", "participant.users_permissions_user", "task"],
       });
 
     return {
-      data: discussions
+      data: discussions,
     };
   },
 
@@ -175,10 +163,10 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
       .findOne({
         where: {
           tasks: {
-            id
-          }
+            id,
+          },
         },
-        populate: ["users_permissions_user", "users_permissions_user.avatar"]
+        populate: ["users_permissions_user", "users_permissions_user.avatar"],
       });
 
     return {
@@ -186,8 +174,19 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
         id: participant.id,
         firstName: participant.users_permissions_user?.firstName,
         lastName: participant.users_permissions_user?.lastName,
-        avatar: participant.users_permissions_user?.avatar
-      }
+        avatar: participant.users_permissions_user?.avatar,
+      },
     };
-  }
+  },
+
+  async createMany(ctx) {
+    const { tasks } = ctx.request.body;
+
+    for (let i = 0; i < tasks.length; i++) {
+      ctx.request.body = { data: task };
+      await super.create(ctx.request.body);
+    }
+
+    return { ok: true, created: tasks.length };
+  },
 }));

@@ -54,5 +54,10 @@ module.exports = {
         middlewares: [],
       },
     },
+    {
+      method: "POST",
+      path: "/admin/tasks/createMany",
+      handler: "task.createMany",
+    },
   ],
 };
