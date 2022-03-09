@@ -238,6 +238,16 @@ module.exports = {
       });
     }
 
+    if(params.scope === "event") {
+      const { participant } = await strapi
+        .service("api::participant.participant")
+        .currentParticipant(ctx.state.user.id);
+
+      if(!participant) {
+        throw new ValidationError("Invalid Login");
+      }
+    }
+
     if(params.scope === "portal") {
       const is_admin = await isAdmin(user);
       if(!is_admin) {
