@@ -220,7 +220,7 @@ module.exports = {
 
       user = await strapi
         .query("plugin::users-permissions.user")
-        .findOne({ where: query, populate });
+        .findOne({ where: query });
 
       if(
         !user ||
