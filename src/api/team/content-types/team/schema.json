@@ -42,6 +42,12 @@
     },
     "wifiPassword": {
       "type": "string"
+    },
+    "internetUsername": {
+      "type": "string"
+    },
+    "internetPassword": {
+      "type": "string"
     }
   }
 }

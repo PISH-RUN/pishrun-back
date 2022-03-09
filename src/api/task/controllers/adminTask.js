@@ -50,8 +50,8 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
     });
 
     const { results, pagination } = await strapi
-      .service("api::task.task")
-      .find(ctx.query);
+      .entityService
+      .findPage("api::task.task", ctx.query);
 
     return {
       data: results.map((t) => ({
