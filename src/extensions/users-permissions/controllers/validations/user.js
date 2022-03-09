@@ -38,6 +38,7 @@ const updateUserBodySchema = yup
     instagram: yup.string().url().nullable(),
     province: yup.string().nullable(),
     city: yup.string().nullable(),
+    status: yup.string().nullable(),
   });
 
 module.exports = {
