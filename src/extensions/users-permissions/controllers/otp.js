@@ -238,10 +238,10 @@ module.exports = {
       });
     }
 
-    if(params.scope === "event") {
+    if(user && params.scope === "event") {
       const { participant } = await strapi
         .service("api::participant.participant")
-        .currentParticipant(ctx.state.user.id);
+        .currentParticipant(user.id);
 
       if(!participant) {
         throw new ValidationError("Invalid Login");
