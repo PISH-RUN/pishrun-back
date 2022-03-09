@@ -220,7 +220,7 @@ module.exports = {
 
       user = await strapi
         .query("plugin::users-permissions.user")
-        .findOne({ where: query });
+        .findOne({ where: query, populate });
 
       if(
         !user ||
@@ -228,6 +228,14 @@ module.exports = {
         tokenExpiryMinutes
       ) {
         throw new ValidationError("Invalid Credentials");
+      }
+
+      const { participant } = await strapi
+        .service("api::participant.participant")
+        .currentParticipant(ctx.state.user.id);
+
+      if(!participant) {
+        throw new ValidationError("Invalid Login");
       }
 
       await updateUser(user.id, {
