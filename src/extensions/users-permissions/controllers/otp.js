@@ -230,14 +230,6 @@ module.exports = {
         throw new ValidationError("Invalid Credentials");
       }
 
-      const { participant } = await strapi
-        .service("api::participant.participant")
-        .currentParticipant(ctx.state.user.id);
-
-      if(!participant) {
-        throw new ValidationError("Invalid Login");
-      }
-
       await updateUser(user.id, {
         otp: null,
         registered: true,
