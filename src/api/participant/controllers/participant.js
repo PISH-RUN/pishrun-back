@@ -117,45 +117,13 @@ module.exports = createCoreController(
       return { data: participant };
     },
 
-    async add(ctx) {
-      const { prefix, count, team } = ctx.request.body;
-
-      for (let i = 1; i <= count; i++) {
-        let num = i;
-        if(num < 10) num = `00${num}`;
-        else if(num < 100) num = `0${num}`;
-        else if(num > 1000) {
-          return;
-        }
-
-        const seat = await strapi.db
-          .query("api::seat.seat")
-          .create({
-            data: {
-              slug: `${prefix}${num}`,
-              hall: halls[prefix]
-            }
-          });
-
-        await strapi.db
-          .query("api::participant.participant")
-          .create({
-            data: { label: `${prefix}${num}`, team: team, seat: seat.id }
-          });
-      }
-
-      return {
-        data: true
-      };
-    },
-
     async accept(ctx) {
       let { participant } = await strapi
         .service("api::participant.participant")
         .currentParticipant(ctx.state.user.id);
 
       if(!participant) {
-        throw new NotFoundError("user participant not found")
+        throw new NotFoundError("user participant not found");
       }
 
       participant = await strapi.db
@@ -180,7 +148,7 @@ module.exports = createCoreController(
         .currentParticipant(ctx.state.user.id);
 
       if(!participant) {
-        throw new NotFoundError("user participant not found")
+        throw new NotFoundError("user participant not found");
       }
 
       participant = await strapi.db

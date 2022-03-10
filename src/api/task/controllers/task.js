@@ -183,8 +183,9 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
     const { tasks } = ctx.request.body;
 
     for (let i = 0; i < tasks.length; i++) {
+      const task = tasks[i]
       ctx.request.body = { data: task };
-      await super.create(ctx.request.body);
+      await super.create(ctx);
     }
 
     return { ok: true, created: tasks.length };
