@@ -128,9 +128,9 @@ module.exports = {
     return await strapi.db
       .query("plugin::users-permissions.user").updateMany(
         {
-          where: ctx.query
-        },
-        ctx.body.data
+          where: ctx.query.filters,
+          data: ctx.request.body.data
+        }
       );
   },
   async adminAddUser(ctx) {
