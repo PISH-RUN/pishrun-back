@@ -128,9 +128,7 @@ module.exports = {
     return await strapi.db
       .query("plugin::users-permissions.user").updateMany(
         {
-          where: {
-            ids: ctx.body.ids
-          }
+          where: ctx.query
         },
         ctx.body.data
       );
