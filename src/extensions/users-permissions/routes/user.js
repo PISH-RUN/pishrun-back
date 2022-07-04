@@ -35,6 +35,14 @@ module.exports = {
       },
     },
     {
+      method: "PUT",
+      path: "/admin/users",
+      handler: "user.adminEditUsers",
+      config: {
+        prefix: "",
+      },
+    },
+    {
       method: "GET",
       path: "/admin/users/:id",
       handler: "user.findOne",

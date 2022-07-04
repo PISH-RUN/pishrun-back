@@ -42,7 +42,7 @@ module.exports = {
     await validateUpdateUserBody(ctx.request.body);
 
     let updateData = {
-      ...ctx.request.body,
+      ...ctx.request.body
     };
 
     const data = await getService("user").edit(user.id, updateData);
@@ -56,7 +56,7 @@ module.exports = {
     const user = await getService("user").fetch({ id });
 
     let updateData = {
-      ...ctx.request.body,
+      ...ctx.request.body
     };
 
     const data = await getService("user").edit(user.id, updateData);
@@ -65,7 +65,7 @@ module.exports = {
     ctx.send(sanitizedData);
   },
   async me(ctx) {
-    if (!ctx.state.user) {
+    if(!ctx.state.user) {
       return ctx.unauthorized();
     }
     const user = await strapi.entityService.findOne(
@@ -90,23 +90,23 @@ module.exports = {
           "seat",
           "seat.hall",
           "users_permissions_user",
-          "users_permissions_user.avatar",
-        ],
+          "users_permissions_user.avatar"
+        ]
       });
 
     return {
-      data: participant,
+      data: participant
     };
   },
   async adminUsers(ctx) {
-    if (!ctx.state.user) {
+    if(!ctx.state.user) {
       return ctx.unauthorized();
     }
 
     ctx.query = merge(ctx.query, {
       populate: [
         "referredBy", "participants", "participants.team", "participants.team.event"
-      ],
+      ]
     });
 
     const { results, pagination } = await strapi.entityService
@@ -120,16 +120,31 @@ module.exports = {
       pagination
     };
   },
+  async adminEditUsers(ctx) {
+    if(!ctx.state.user) {
+      return ctx.unauthorized();
+    }
+
+    return await strapi.db
+      .query("plugin::users-permissions.user").updateMany(
+        {
+          where: {
+            ids: ctx.body.ids
+          }
+        },
+        ctx.body.data
+      );
+  },
   async adminAddUser(ctx) {
-    if (!ctx.state.user) {
+    if(!ctx.state.user) {
       return ctx.unauthorized();
     }
     let user = ctx.request.body;
 
-    user = await createUser(user)
+    user = await createUser(user);
 
     return {
       data: user
     };
-  },
+  }
 };
