@@ -138,12 +138,16 @@ module.exports = {
       return ctx.unauthorized();
     }
 
-    return await strapi.db
-      .query("api::participant.participant").createMany(
-        {
-          data: ctx.request.body.data
-        }
-      );
+    for (let i = 0;i < ctx.request.body.data.length;i++) {
+      await strapi.db
+        .query("api::participant.participant").create({
+          data: ctx.request.body.data[i]
+        });
+    }
+
+    return {
+      ok: true
+    }
   },
   async adminAddUser(ctx) {
     if(!ctx.state.user) {
