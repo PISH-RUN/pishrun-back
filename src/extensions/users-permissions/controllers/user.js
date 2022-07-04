@@ -133,6 +133,18 @@ module.exports = {
         }
       );
   },
+  async adminCreateParticipants(ctx) {
+    if(!ctx.state.user) {
+      return ctx.unauthorized();
+    }
+
+    return await strapi.db
+      .query("api::participant.participant").createMany(
+        {
+          data: ctx.request.body.data
+        }
+      );
+  },
   async adminAddUser(ctx) {
     if(!ctx.state.user) {
       return ctx.unauthorized();

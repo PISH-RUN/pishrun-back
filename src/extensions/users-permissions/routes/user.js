@@ -43,6 +43,14 @@ module.exports = {
       },
     },
     {
+      method: "POST",
+      path: "/admin/participants",
+      handler: "user.adminCreateParticipants",
+      config: {
+        prefix: "",
+      },
+    },
+    {
       method: "GET",
       path: "/admin/users/:id",
       handler: "user.findOne",
