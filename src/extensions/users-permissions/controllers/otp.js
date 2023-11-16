@@ -199,6 +199,7 @@ module.exports = {
         .query("plugin::users-permissions.user")
         .findOne({ where: { mobile: params.mobile } });
 
+      console.log(params.password, params.mobile, user)
       const validPassword = await strapi.plugins[
         "users-permissions"
         ].services.user.validatePassword(params.password, user.password);

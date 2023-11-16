@@ -7,6 +7,11 @@ module.exports = {
     },
     {
       method: "GET",
+      path: "/eventData/:slug",
+      handler: "event.eventData",
+    },
+    {
+      method: "GET",
       path: "/admin/event",
       handler: "event.activeEvent",
     },

@@ -1,0 +1,55 @@
+{
+  "kind": "collectionType",
+  "collectionName": "event_datas",
+  "info": {
+    "singularName": "event-data",
+    "pluralName": "event-datas",
+    "displayName": "eventData",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "state": {
+      "type": "string"
+    },
+    "event": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::event.event",
+      "inversedBy": "data"
+    },
+    "badge": {
+      "type": "string"
+    },
+    "introVideo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "videos"
+      ]
+    },
+    "introImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "leader": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "overview": {
+      "type": "text"
+    }
+  }
+}

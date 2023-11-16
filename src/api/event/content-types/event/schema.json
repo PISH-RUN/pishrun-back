@@ -55,6 +55,12 @@
     },
     "active": {
       "type": "boolean"
+    },
+    "data": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::event-data.event-data",
+      "mappedBy": "event"
     }
   }
 }
