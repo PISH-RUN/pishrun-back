@@ -61,6 +61,12 @@
       "relation": "oneToOne",
       "target": "api::event-data.event-data",
       "mappedBy": "event"
+    },
+    "participantRequests": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "eventRequests"
     }
   }
 }

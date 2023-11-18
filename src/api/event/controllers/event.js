@@ -7,6 +7,10 @@ const merge = require("lodash/merge");
 
 const { createCoreController } = require("@strapi/strapi").factories;
 
+const formatError = error => [
+  { messages: [{ id: error.id, message: error.message, field: error.field }] }
+];
+
 module.exports = createCoreController("api::event.event", ({ strapi }) => ({
   async find(ctx) {
     const event = await strapi.service("api::event.event").currentEvent();
@@ -21,6 +25,47 @@ module.exports = createCoreController("api::event.event", ({ strapi }) => ({
     return {
       data: event,
     };
+  },
+  async registerRequest(ctx) {
+    const { slug } = ctx.request.params;
+    const user = ctx.state.user.id;
+
+    const event = await strapi.db
+      .query("api::event.event")
+      .findOne({
+        where: {
+          slug: slug
+        },
+        populate: ['participantRequests']
+      });
+
+    if(event.participantRequests.find(u => u.id === user)) {
+      return ctx.badRequest(
+        null,
+        formatError({
+          id: "event.request.register.exist",
+          message: "Your are requested before."
+        })
+      );
+    }
+
+    await strapi.db
+      .query("api::event.event")
+      .update({
+        where: {
+          slug: slug
+        },
+        data: {
+          participantRequests: [
+            ...(event.participantRequests || [])?.map(u => u.id),
+            user
+          ]
+        },
+      });
+
+    return {
+      ok: true
+    }
   },
   async eventData(ctx) {
     const { slug } = ctx.request.params;

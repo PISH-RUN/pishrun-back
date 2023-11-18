@@ -142,6 +142,15 @@
     },
     "status": {
       "type": "string"
+    },
+    "bio": {
+      "type": "text"
+    },
+    "eventRequests": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::event.event",
+      "inversedBy": "participantRequests"
     }
   }
 }

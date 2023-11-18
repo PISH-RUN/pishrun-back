@@ -11,6 +11,11 @@ module.exports = {
       handler: "event.eventData",
     },
     {
+      method: "POST",
+      path: "/event-register/:slug",
+      handler: "event.registerRequest",
+    },
+    {
       method: "GET",
       path: "/admin/event",
       handler: "event.activeEvent",
