@@ -11,6 +11,15 @@ module.exports = {
     },
     {
       method: "POST",
+      path: "/tasks/:id/take",
+      handler: "task.take",
+      config: {
+        policies: [],
+        middlewares: [],
+      },
+    },
+    {
+      method: "POST",
       path: "/tasks/:id/finish",
       handler: "task.finish",
       config: {
@@ -40,6 +49,15 @@ module.exports = {
       method: "POST",
       path: "/tasks/:id/fail",
       handler: "task.fail",
+      config: {
+        policies: [],
+        middlewares: [],
+      },
+    },
+    {
+      method: "POST",
+      path: "/tasks/:id/upload",
+      handler: "task.file",
       config: {
         policies: [],
         middlewares: [],

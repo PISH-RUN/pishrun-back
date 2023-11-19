@@ -107,6 +107,23 @@
       "type": "component",
       "repeatable": true,
       "component": "basics.array-of-string"
+    },
+    "files": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ]
+    },
+    "userDescription": {
+      "type": "text"
+    },
+    "canTake": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

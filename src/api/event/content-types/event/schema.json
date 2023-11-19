@@ -67,6 +67,10 @@
       "relation": "manyToMany",
       "target": "plugin::users-permissions.user",
       "inversedBy": "eventRequests"
+    },
+    "customTask": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

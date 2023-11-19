@@ -11,6 +11,14 @@ module.exports = {
       },
     },
     {
+      method: "POST",
+      path: "/users/me/avatar",
+      handler: "user.avatar",
+      config: {
+        prefix: "",
+      },
+    },
+    {
       method: "GET",
       path: "/admin/me",
       handler: "user.adminMe",

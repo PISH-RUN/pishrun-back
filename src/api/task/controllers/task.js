@@ -18,10 +18,63 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
     }
 
     ctx.query = merge(ctx.query, {
-      filters: { participant: { id: { $eq: participant.id } } },
+      filters: {
+        $or: [
+          {
+            participant: { id: { $eq: participant.id } }
+          },
+          {
+            canTake: true,
+            participant: {
+              id: {
+                $null: true
+              }
+            }
+          }
+        ]
+      },
     });
 
     return await super.find(ctx);
+  },
+
+  async take(ctx) {
+    const { id } = ctx.request.params;
+
+    const { participant } = await strapi
+      .service("api::participant.participant")
+      .currentParticipant(ctx.state.user.id);
+    const currentTask = await strapi.query("api::task.task").findOne({
+      where: {
+        id,
+      },
+      populate: ['participant']
+    });
+
+    if(!!currentTask.participant) {
+      return {message: 'task already assigned'}
+    }
+
+    if(!currentTask.canTake) {
+      return {message: 'task is not take-able'}
+    }
+
+    if(!participant) {
+      return {message: 'participant not found'}
+    }
+
+    const task = await strapi.db.query("api::task.task").update({
+      data: {
+        participant: participant.id,
+      },
+      where: {
+        id,
+      },
+    });
+
+    return {
+      data: task,
+    };
   },
 
   async start(ctx) {
@@ -44,6 +97,7 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
 
   async finish(ctx) {
     const { id } = ctx.request.params;
+    const { userDescription } = ctx.request.body;
     const currentTask = await strapi.query("api::task.task").findOne({
       where: {
         id,
@@ -72,6 +126,7 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
       data: {
         finishedAt: new Date(),
         status: "done",
+        userDescription: userDescription,
         medal,
       },
       where: {
@@ -170,12 +225,12 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
       });
 
     return {
-      data: {
+      data: participant ? {
         id: participant.id,
         firstName: participant.users_permissions_user?.firstName,
         lastName: participant.users_permissions_user?.lastName,
         avatar: participant.users_permissions_user?.avatar,
-      },
+      } : {},
     };
   },
 
@@ -189,5 +244,25 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
     }
 
     return { ok: true, created: tasks.length };
+  },
+
+  async file(ctx) {
+    const { id } = ctx.request.params;
+    const { files } = ctx.request;
+
+    const currentTask = await strapi.query("api::task.task").findOne({
+      where: {
+        id,
+      },
+      populate: ["files"],
+    });
+
+    const response = await strapi.entityService.update("api::task.task", id, {
+      data: {},
+      files: { files: [...(currentTask.files || []), ...files.files] },
+      populate: ["files"],
+    });
+
+    ctx.send(response);
   },
 }));

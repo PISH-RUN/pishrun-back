@@ -29,6 +29,9 @@ const createUser = async (userData) => {
   }
 };
 
+const updateUser = (userId, params) =>
+  strapi.entityService.update("plugin::users-permissions.user", userId, params);
+
 module.exports = {
   async updateMe(ctx) {
     const advancedConfigs = await strapi
@@ -77,6 +80,22 @@ module.exports = {
     const result = await sanitizeOutput(user, ctx);
 
     ctx.body = { ...result, hasPassword: user.password != null };
+  },
+  async avatar(ctx) {
+    const { user: authUser } = ctx.state;
+    const { files } = ctx.request;
+
+    if (!files.avatar) {
+      return ctx.badRequest(`you need to provide avatar file`);
+    }
+
+    const user = await updateUser(authUser.id, {
+      data: {},
+      files: { avatar: files.avatar },
+      populate: ["avatar"],
+    });
+
+    ctx.send(await sanitizeOutput(user, ctx));
   },
   async adminMe(ctx) {
     const { participant } = await strapi
