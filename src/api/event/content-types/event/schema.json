@@ -71,6 +71,12 @@
     "customTask": {
       "type": "boolean",
       "default": false
+    },
+    "steps": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::event-step.event-step",
+      "mappedBy": "event"
     }
   }
 }

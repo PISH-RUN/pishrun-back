@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_exam_question_items",
+  "info": {
+    "displayName": "Question Item",
+    "icon": "question"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    }
+  }
+}

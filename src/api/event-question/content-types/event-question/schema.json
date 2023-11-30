@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "event_questions",
+  "info": {
+    "singularName": "event-question",
+    "pluralName": "event-questions",
+    "displayName": "Event Question",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "text"
+    },
+    "multiAnswer": {
+      "type": "boolean",
+      "default": false
+    },
+    "answerLabels": {
+      "displayName": "Question Item",
+      "type": "component",
+      "repeatable": true,
+      "component": "exam.question-item"
+    },
+    "event_step": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::event-step.event-step",
+      "inversedBy": "questions"
+    },
+    "answerCount": {
+      "type": "integer"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "event_answers",
+  "info": {
+    "singularName": "event-answer",
+    "pluralName": "event-answers",
+    "displayName": "Event Answer",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "question": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::event-question.event-question"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "answer": {
+      "type": "json"
+    }
+  }
+}

@@ -124,6 +124,16 @@
     "canTake": {
       "type": "boolean",
       "default": false
+    },
+    "required_prerequisites": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::task.task"
+    },
+    "prerequisites": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::task.task"
     }
   }
 }

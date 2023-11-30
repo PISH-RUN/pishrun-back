@@ -5,13 +5,13 @@ const merge = require("lodash/merge");
  *  event controller
  */
 
-const { createCoreController } = require("@strapi/strapi").factories;
+const {createCoreController} = require("@strapi/strapi").factories;
 
 const formatError = error => [
-  { messages: [{ id: error.id, message: error.message, field: error.field }] }
+  {messages: [{id: error.id, message: error.message, field: error.field}]}
 ];
 
-module.exports = createCoreController("api::event.event", ({ strapi }) => ({
+module.exports = createCoreController("api::event.event", ({strapi}) => ({
   async find(ctx) {
     const event = await strapi.service("api::event.event").currentEvent();
 
@@ -27,7 +27,7 @@ module.exports = createCoreController("api::event.event", ({ strapi }) => ({
     };
   },
   async registerRequest(ctx) {
-    const { slug } = ctx.request.params;
+    const {slug} = ctx.request.params;
     const user = ctx.state.user.id;
 
     const event = await strapi.db
@@ -39,7 +39,7 @@ module.exports = createCoreController("api::event.event", ({ strapi }) => ({
         populate: ['participantRequests']
       });
 
-    if(event.participantRequests.find(u => u.id === user)) {
+    if (event.participantRequests.find(u => u.id === user)) {
       return ctx.badRequest(
         null,
         formatError({
@@ -68,7 +68,7 @@ module.exports = createCoreController("api::event.event", ({ strapi }) => ({
     }
   },
   async eventData(ctx) {
-    const { slug } = ctx.request.params;
+    const {slug} = ctx.request.params;
 
     const event = await strapi.db
       .query("api::event.event")
@@ -95,7 +95,7 @@ module.exports = createCoreController("api::event.event", ({ strapi }) => ({
           const manager = team.participants.find(p => p.role === "manager");
           return {
             ...team,
-            participants: team.participants.map(p => ({ ...p, user: p.users_permissions_user })),
+            participants: team.participants.map(p => ({...p, user: p.users_permissions_user})),
             manager: manager ? {
               ...manager,
               users_permissions_user: undefined,
@@ -114,6 +114,56 @@ module.exports = createCoreController("api::event.event", ({ strapi }) => ({
           }
         }
       },
+    };
+  },
+  async eventStep(ctx) {
+    const {slug} = ctx.request.params;
+
+    const event = await strapi.db
+      .query("api::event.event")
+      .findOne({
+        where: {
+          slug: slug
+        },
+        populate: ['steps', 'steps.questions', 'steps.questions.answerLabels']
+      });
+
+    return {
+      data: event?.steps,
+    };
+  },
+  async eventStepSave(ctx) {
+    const {id} = ctx.state.user;
+    const {slug} = ctx.request.params;
+    const {data} = ctx.request.body;
+
+    for (let i = 0; i < data.length; i++) {
+      const itemData = data[i]
+      await strapi.db.query("api::event-answer.event-answer").delete({
+        where: {
+          user: {
+            id: id
+          },
+          question: {
+            id: parseInt(itemData.question)
+          }
+        }
+      })
+
+      await strapi.db
+        .query("api::event-answer.event-answer")
+        .create({
+          data: {
+            ...itemData,
+            question: parseInt(itemData.question),
+            user: id
+          }
+        });
+    }
+
+
+    return {
+      ok: true,
     };
   },
 }));

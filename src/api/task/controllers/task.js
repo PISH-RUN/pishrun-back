@@ -38,6 +38,39 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
     return await super.find(ctx);
   },
 
+  async findOne(ctx) {
+    ctx.query = merge(ctx.query, {
+      populate: {
+        required_prerequisites: {
+          populate: {
+            participant: {
+              populate: {
+                users_permissions_user: {
+                  fields: ['id', 'firstName', 'lastName']
+                }
+              }
+            }
+          }
+        },
+        prerequisites: {
+          populate: {
+            participant: {
+              populate: {
+                users_permissions_user: {
+                  fields: ['id', 'firstName', 'lastName']
+                }
+              }
+            }
+          }
+        }
+      },
+    });
+
+    console.log(ctx.query)
+
+    return await super.findOne(ctx);
+  },
+
   async take(ctx) {
     const { id } = ctx.request.params;
 

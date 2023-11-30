@@ -77,7 +77,7 @@ module.exports = createCoreController(
             id: event.id
           }
         },
-        populate: ["participants", "participants.tasks", "participants.tasks.specialty", "participants.users_permissions_user", "tasks", "tasks.link", "tasks.specialty", "tasks.participant"]
+        populate: ["participants", "participants.tasks", "participants.tasks.specialty", "tasks.required_prerequisites", "tasks.prerequisites", "participants.users_permissions_user", "tasks", "tasks.link", "tasks.specialty", "tasks.participant"]
       });
 
       return {

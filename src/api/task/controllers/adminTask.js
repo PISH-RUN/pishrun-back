@@ -19,6 +19,8 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
         "team",
         "event",
         "participant",
+        "required_prerequisites",
+        "prerequisites",
         "participant.users_permissions_user",
         "participant.users_permissions_user.avatar"
       ]

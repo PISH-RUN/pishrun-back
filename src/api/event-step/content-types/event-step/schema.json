@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "event_steps",
+  "info": {
+    "singularName": "event-step",
+    "pluralName": "event-steps",
+    "displayName": "Event Step",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "order": {
+      "type": "integer"
+    },
+    "description": {
+      "type": "text"
+    },
+    "questions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::event-question.event-question",
+      "mappedBy": "event_step"
+    },
+    "event": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::event.event",
+      "inversedBy": "steps"
+    },
+    "title": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    }
+  }
+}
