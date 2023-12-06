@@ -151,6 +151,10 @@
       "relation": "manyToMany",
       "target": "api::event.event",
       "mappedBy": "participantRequests"
+    },
+    "username": {
+      "type": "string",
+      "unique": true
     }
   }
 }
