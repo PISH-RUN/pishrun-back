@@ -43,6 +43,9 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
       populate: {
         required_prerequisites: {
           populate: {
+            files: {
+              populate: '*'
+            },
             participant: {
               populate: {
                 users_permissions_user: {
@@ -54,6 +57,9 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
         },
         prerequisites: {
           populate: {
+            files: {
+              populate: '*'
+            },
             participant: {
               populate: {
                 users_permissions_user: {
