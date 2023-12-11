@@ -19,6 +19,24 @@ module.exports = {
       },
     },
     {
+      method: "GET",
+      path: "/tasks/bySlug/:slug",
+      handler: "task.bySlug",
+      config: {
+        policies: [],
+        middlewares: [],
+      },
+    },
+    {
+      method: "POST",
+      path: "/tasks/:id/reject",
+      handler: "task.reject",
+      config: {
+        policies: [],
+        middlewares: [],
+      },
+    },
+    {
       method: "POST",
       path: "/tasks/:id/finish",
       handler: "task.finish",

@@ -116,6 +116,111 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
     };
   },
 
+  async reject(ctx) {
+    const { id } = ctx.request.params;
+    const { parentTask } = ctx.request.body;
+
+    const task = await strapi.db.query("api::task.task").findOne({
+      where: {
+        id,
+      },
+    });
+    const mainTask = await strapi.db.query("api::task.task").findOne({
+      populate: ['required_prerequisites'],
+      where: {
+        parentTask,
+      },
+    });
+
+    const created = await strapi.db.query("api::task.task").create({
+      data: {
+        ...task
+      }
+    })
+
+    await strapi.db.query("api::task.task").update({
+      data: {
+        required_prerequisites: [...mainTask.required_prerequisites, created.id]
+      },
+      where: {
+        id: parentTask,
+      },
+    })
+
+    await strapi.db.query("api::task.task").update({
+      data: {
+        status: 'failed'
+      },
+      where: {
+        id,
+      },
+    })
+
+    return {
+      data: created,
+    };
+  },
+
+  async bySlug(ctx) {
+    const { slug } = ctx.request.params;
+
+    console.log(slug)
+
+    const task = await strapi.db.query("api::task.task").findOne({
+      populate: {
+        required_prerequisites: {
+          populate: {
+            files: {
+              populate: ['*']
+            },
+            participant: {
+              populate: {
+                users_permissions_user: {
+                  fields: ['id', 'firstName', 'lastName', 'username']
+                }
+              }
+            }
+          }
+        },
+        prerequisites: {
+          populate: {
+            files: {
+              populate: ['*']
+            },
+            participant: {
+              populate: {
+                users_permissions_user: {
+                  fields: ['id', 'firstName', 'lastName', 'username']
+                }
+              }
+            }
+          }
+        }
+      },
+      where: {
+        slug,
+      },
+    });
+
+    return {
+      data: {
+        ...task,
+        required_prerequisites: undefined,
+        contents: task.required_prerequisites?.map(pTask => ({
+          text: pTask.userDescription,
+          user: {
+            id: pTask?.participant?.users_permissions_user?.id,
+            firstName: pTask?.participant?.users_permissions_user?.firstName,
+            lastName: pTask?.participant?.users_permissions_user?.lastName,
+            username: pTask?.participant?.users_permissions_user?.username,
+          },
+          files: pTask.files.map(f => f.url),
+          slug: pTask.slug
+        }))
+      },
+    };
+  },
+
   async start(ctx) {
     const { id } = ctx.request.params;
 
