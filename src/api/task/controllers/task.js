@@ -215,7 +215,7 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
             lastName: pTask?.participant?.users_permissions_user?.lastName,
             username: pTask?.participant?.users_permissions_user?.username,
           },
-          files: pTask.files.map(f => f.url),
+          files: pTask.files?.map(f => f.url),
           slug: pTask.slug
         }))
       },
