@@ -203,11 +203,15 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
       },
     });
 
+    if(!task) {
+      return task;
+    }
+
     return {
       data: {
         ...task,
         required_prerequisites: undefined,
-        contents: task.required_prerequisites?.map(pTask => ({
+        contents: task?.required_prerequisites?.map(pTask => ({
           text: pTask.userDescription,
           user: {
             id: pTask?.participant?.users_permissions_user?.id,
@@ -404,7 +408,7 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
 
     const response = await strapi.entityService.update("api::task.task", id, {
       data: {},
-      files: { files: [...(currentTask.files || []), ...files.files] },
+      files: { files: [...(currentTask.files || []), ...(files.files || [])] },
       populate: ["files"],
     });
 
