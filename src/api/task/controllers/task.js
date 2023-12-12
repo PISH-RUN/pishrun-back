@@ -134,7 +134,8 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
 
     const created = await strapi.db.query("api::task.task").create({
       data: {
-        ...task
+        ...task,
+        order: 0,
       }
     })
 
