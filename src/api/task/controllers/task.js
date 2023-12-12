@@ -406,9 +406,11 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
       populate: ["files"],
     });
 
+    console.log(files)
+
     const response = await strapi.entityService.update("api::task.task", id, {
       data: {},
-      files: { files: [...(currentTask.files || []), ...(Array.isArray(files.files) ? files.files : [files.files])] },
+      files: { files: [...(currentTask.files || []), ...files.files] },
       populate: ["files"],
     });
 
