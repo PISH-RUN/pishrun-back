@@ -89,6 +89,12 @@ module.exports = {
       return ctx.badRequest(`you need to provide avatar file`);
     }
 
+    await updateUser(authUser.id, {
+      data: {
+        avatar: null
+      },
+      populate: ["avatar"],
+    });
     const user = await updateUser(authUser.id, {
       data: {},
       files: { avatar: files.avatar },

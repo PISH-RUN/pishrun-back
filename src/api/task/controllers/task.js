@@ -399,18 +399,15 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
     const { id } = ctx.request.params;
     const { files } = ctx.request;
 
-    const currentTask = await strapi.query("api::task.task").findOne({
-      where: {
-        id,
+    await strapi.entityService.update("api::task.task", id, {
+      data: {
+        files: []
       },
-      populate: ["files"],
     });
-
-    console.log(files)
 
     const response = await strapi.entityService.update("api::task.task", id, {
       data: {},
-      files: { files: [...(currentTask.files || []), ...files.files] },
+      files: { files: files.files },
       populate: ["files"],
     });
 
