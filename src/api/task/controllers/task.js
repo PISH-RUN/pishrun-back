@@ -166,7 +166,7 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
     const mainTask = await strapi.db.query("api::task.task").findOne({
       populate: ['required_prerequisites'],
       where: {
-        parentTask,
+        id: parentTask,
       },
     });
 
