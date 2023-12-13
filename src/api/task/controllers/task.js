@@ -81,7 +81,7 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
           required_prerequisites: {
             populate: {
               files: {
-                populate: '*'
+                populate: ['*']
               },
               participant: {
                 populate: {
@@ -118,7 +118,7 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
           required_prerequisites: {
             populate: {
               files: {
-                populate: '*'
+                populate: ['*']
               },
               participant: {
                 populate: {
@@ -132,7 +132,7 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
           prerequisites: {
             populate: {
               files: {
-                populate: '*'
+                populate: ['*']
               },
               participant: {
                 populate: {
@@ -148,7 +148,7 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
 
       return {
         ...task,
-        taskDescription: parentTask.find(t => !!t.userDescription && t.userDescription !== '')?.userDescription
+        taskDescription: parentTask?.required_prerequisites?.find(t => !!t.userDescription && t.userDescription !== '' && t.status !== 'failed')?.userDescription
       }
     }
 
@@ -204,7 +204,9 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
       where: {
         id,
       },
+      populate: ['participant', 'event', 'team', 'files', 'link', 'specialty']
     });
+    console.log(task)
     const mainTask = await strapi.db.query("api::task.task").findOne({
       populate: ['required_prerequisites'],
       where: {
@@ -216,8 +218,18 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
       data: {
         ...task,
         id: undefined,
-        order: 0,
+        status: "todo",
+        order: 1,
       }
+    })
+
+    await strapi.db.query("api::task.task").update({
+      data: {
+        slug: task.slug + '-failed'
+      },
+      where: {
+        id: task.id,
+      },
     })
 
     await strapi.db.query("api::task.task").update({
