@@ -111,9 +111,7 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
       const parentTask = await strapi.query("api::task.task").findOne({
         where: {
           required_prerequisites: {
-            id: {
-              $contains: task.id
-            }
+            id: task.id
           },
         },
         populate: {
