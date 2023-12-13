@@ -198,7 +198,7 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
 
   async reject(ctx) {
     const { id } = ctx.request.params;
-    const { parentTask } = ctx.request.body;
+    const { parentTask, reason } = ctx.request.body;
 
     const task = await strapi.db.query("api::task.task").findOne({
       where: {
@@ -218,6 +218,7 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
       data: {
         ...task,
         id: undefined,
+        body: reason + "\n\n" + task.body,
         status: "todo",
         order: 1,
       }
