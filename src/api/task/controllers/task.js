@@ -72,6 +72,44 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
       },
     });
 
+    if(/[A-Z]/g.test(ctx.request.params.id)) {
+      return await strapi.query("api::task.task").findOne({
+        where: {
+          slug: ctx.request.params.id,
+        },
+        populate: {
+          required_prerequisites: {
+            populate: {
+              files: {
+                populate: '*'
+              },
+              participant: {
+                populate: {
+                  users_permissions_user: {
+                    fields: ['id', 'firstName', 'lastName']
+                  }
+                }
+              }
+            }
+          },
+          prerequisites: {
+            populate: {
+              files: {
+                populate: '*'
+              },
+              participant: {
+                populate: {
+                  users_permissions_user: {
+                    fields: ['id', 'firstName', 'lastName']
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
     console.log(ctx.query)
 
     return await super.findOne(ctx);
