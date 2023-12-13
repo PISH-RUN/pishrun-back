@@ -73,7 +73,7 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
     });
 
     if(/[A-Z]/g.test(ctx.request.params.id)) {
-      return await strapi.query("api::task.task").findOne({
+      const task = await strapi.query("api::task.task").findOne({
         where: {
           slug: ctx.request.params.id,
         },
@@ -108,6 +108,50 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
           }
         }
       });
+      const parentTask = await strapi.query("api::task.task").findOne({
+        where: {
+          required_prerequisites: {
+            id: {
+              $contains: task.id
+            }
+          },
+        },
+        populate: {
+          required_prerequisites: {
+            populate: {
+              files: {
+                populate: '*'
+              },
+              participant: {
+                populate: {
+                  users_permissions_user: {
+                    fields: ['id', 'firstName', 'lastName']
+                  }
+                }
+              }
+            }
+          },
+          prerequisites: {
+            populate: {
+              files: {
+                populate: '*'
+              },
+              participant: {
+                populate: {
+                  users_permissions_user: {
+                    fields: ['id', 'firstName', 'lastName']
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+
+      return {
+        ...task,
+        taskDescription: parentTask.find(t => !!t.userDescription && t.userDescription !== '')?.userDescription
+      }
     }
 
     console.log(ctx.query)
