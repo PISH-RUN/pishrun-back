@@ -137,10 +137,23 @@ module.exports = {
     const { results, pagination } = await strapi.entityService
       .findPage("plugin::users-permissions.user", ctx.query);
 
+    const answers = await strapi.db
+      .query("api::event-answer.event-answer").findMany({
+        where: {
+          user: {
+            id: {
+              $in: results.map(u => u.id)
+            }
+          }
+        },
+        populate: ['user', 'question']
+      })
+
     return {
       data: results.map(r => ({
         ...r,
-        activeParticipant: r.participants.find(p => p?.team?.event?.active)
+        activeParticipant: r.participants.find(p => p?.team?.event?.active),
+        answers: answers.filter(a => a.user?.id === r.id)
       })),
       pagination
     };
