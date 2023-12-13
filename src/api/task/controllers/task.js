@@ -493,13 +493,17 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
     const { id } = ctx.request.params;
     const { files } = ctx.request;
 
-    await strapi.entityService.update("api::task.task", id, {
+    const task = await strapi.entityService.findOne("api::task.task", {
+      where: /[A-Z]/g.test(id) ? {slug: id} : {id}
+    })
+
+    await strapi.entityService.update("api::task.task", task.id, {
       data: {
         files: []
       },
     });
 
-    const response = await strapi.entityService.update("api::task.task", id, {
+    const response = await strapi.entityService.update("api::task.task", task.id, {
       data: {},
       files: { files: files.files },
       populate: ["files"],
