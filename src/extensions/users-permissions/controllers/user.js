@@ -134,7 +134,8 @@ module.exports = {
       ]
     });
 
-    const { results, pagination } = await strapi.entityService
+    const { results, pagination } =
+      await strapi.entityService
       .findPage("plugin::users-permissions.user", ctx.query);
 
     const answers = await strapi.db
