@@ -493,7 +493,7 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
     const { id } = ctx.request.params;
     const { files } = ctx.request;
 
-    const taskID = /[A-Z]/g.test(id) ? {slug: id} : {id}
+    const taskID = /[A-Za-z]/g.test(id) ? {slug: id} : {id}
     const task = await strapi.query("api::task.task").findOne({
       where: taskID
     })
