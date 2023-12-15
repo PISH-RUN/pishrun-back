@@ -13,7 +13,7 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
       .service("api::participant.participant")
       .currentParticipant(ctx.state.user.id);
 
-    if (!participant) {
+    if (!participant || participant.role === 'manager') {
       return null;
     }
 
