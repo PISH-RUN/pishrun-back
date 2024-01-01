@@ -341,10 +341,9 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
   async finish(ctx) {
     const { id } = ctx.request.params;
     const { userDescription } = ctx.request.body;
+    const taskID = /[A-Z]/g.test(id) ? {slug: id} : {id}
     const currentTask = await strapi.query("api::task.task").findOne({
-      where: {
-        id,
-      },
+      where: taskID,
     });
 
     let medal = null;
@@ -372,9 +371,7 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
         userDescription: userDescription,
         medal,
       },
-      where: {
-        id,
-      },
+      where: taskID,
     });
 
     return {
