@@ -290,7 +290,10 @@ module.exports = createCoreController("api::task.task", ({ strapi }) => ({
               }
             }
           }
-        }
+        },
+        files: {
+          populate: ['*']
+        },
       },
       where: {
         slug,
